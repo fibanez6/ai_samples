@@ -86,7 +86,12 @@ class ResearchAgent(BaseAgent):
                             "results": search_result
                         })
                 
-                # 2. Fetch new content from URLs
+                # 2. Generate URLs if none provided but we have a query
+                if not urls and query:
+                    urls = await self._generate_research_urls(query)
+                    research_results["generated_urls"] = urls
+                
+                # 3. Fetch new content from URLs
                 if urls:
                     for url in urls[:max_sources]:
                         try:
@@ -126,6 +131,11 @@ class ResearchAgent(BaseAgent):
                 research_results["summary"] = await self._generate_research_summary(
                     query, research_results
                 )
+                
+                # Debug: Print what we actually gathered
+                print(f"🔍 Research Debug - Gathered {len(research_results.get('content_gathered', []))} items")
+                for item in research_results.get('content_gathered', []):
+                    print(f"  - {item.get('type', 'unknown')}: {len(item.get('content', ''))} chars from {item.get('url', 'unknown')}")
                 
                 # Cache results
                 cache_key = f"{query}_{hash(str(urls))}"
@@ -233,6 +243,44 @@ class ResearchAgent(BaseAgent):
         
         summary = await self.invoke_llm(messages)
         return summary
+    
+    async def _generate_research_urls(self, query: str) -> List[str]:
+        """Generate relevant URLs to research based on the query."""
+        print(f"🔍 Generating research URLs for query: {query}")
+        
+        # For now, use predefined URLs based on query keywords to avoid LLM dependency
+        urls = []
+        query_lower = query.lower()
+        
+        if any(keyword in query_lower for keyword in ['ai', 'artificial intelligence', 'machine learning', 'llm', 'gpt']):
+            urls = [
+                "https://openai.com/blog/",
+                "https://deepmind.google/discover/blog/",
+                "https://ai.googleblog.com/",
+                "https://www.technologyreview.com/topic/artificial-intelligence/",
+                "https://techcrunch.com/category/artificial-intelligence/"
+            ]
+            print(f"📡 Generated {len(urls)} AI-focused research URLs")
+        elif any(keyword in query_lower for keyword in ['technology', 'tech', 'innovation']):
+            urls = [
+                "https://techcrunch.com/",
+                "https://www.theverge.com/",
+                "https://arstechnica.com/",
+                "https://www.wired.com/",
+                "https://spectrum.ieee.org/"
+            ]
+            print(f"📡 Generated {len(urls)} technology-focused research URLs")
+        else:
+            # Generic research sources
+            urls = [
+                "https://www.reuters.com/",
+                "https://www.bbc.com/news",
+                "https://techcrunch.com/",
+                "https://www.theverge.com/"
+            ]
+            print(f"📡 Generated {len(urls)} general research URLs")
+        
+        return urls[:3]  # Limit to 3 URLs for faster processing
     
     def get_capabilities(self) -> List[str]:
         """Return list of research agent capabilities."""

@@ -53,11 +53,29 @@ class AnalysisAgent(BaseAgent):
         analysis_type = input_data.get("analysis_type", "comprehensive")
         focus_areas = input_data.get("focus_areas", [])
         
+        # Debug: Print what we received
+        print(f"📊 Analysis Debug - Received research_data keys: {list(research_data.keys()) if research_data else 'None'}")
+        if research_data:
+            content_items = research_data.get('content_gathered', [])
+            print(f"📊 Analysis Debug - Content items: {len(content_items)}")
+            for i, item in enumerate(content_items[:3]):  # Show first 3 items
+                print(f"  Item {i+1}: {item.get('type', 'unknown')} - {len(item.get('content', ''))} chars")
+        
+        # Check if we have actual content to analyze
+        content_items = research_data.get('content_gathered', []) if research_data else []
+        has_content = any(item.get('content') and len(item.get('content', '').strip()) > 0 
+                         for item in content_items)
+        
         if not research_data:
             return {
                 "error": "No research data provided for analysis",
                 "status": "failed"
             }
+        
+        # If no actual content but we have a query, analyze based on the query itself
+        if not has_content and research_data.get('query'):
+            print("🔄 No scraped content available, generating analysis based on query knowledge")
+            return await self._analyze_from_query(research_data.get('query'), analysis_type)
         
         analysis_results = {
             "analysis_type": analysis_type,
@@ -435,6 +453,90 @@ class AnalysisAgent(BaseAgent):
                 limitations.append(line)
         
         return limitations[:5]  # Limit to 5 key limitations
+    
+    async def _analyze_from_query(self, query: str, analysis_type: str = "comprehensive") -> Dict[str, Any]:
+        """Generate analysis based on query alone when no scraped content is available."""
+        prompt = f"""
+        Analyze the following query and provide insights based on your knowledge: "{query}"
+        
+        Please provide:
+        1. Key insights related to this topic (3-5 insights)
+        2. Current trends and patterns
+        3. Important considerations
+        4. Recommendations for action
+        5. Confidence level for each insight (high/medium/low)
+        
+        Focus on factual, current information while acknowledging any limitations due to knowledge cutoff.
+        Format your response as a structured analysis.
+        """
+        
+        try:
+            response = await self.invoke_llm([{"role": "user", "content": prompt}])
+            
+            # Parse the response into structured format
+            insights = self._parse_insights_from_text(response)
+            recommendations = self._parse_recommendations_from_text(response)
+            
+            return {
+                "analysis_type": analysis_type,
+                "input_summary": {"query": query, "method": "knowledge_based"},
+                "key_insights": insights,
+                "patterns_identified": ["Knowledge-based analysis due to limited scraped data"],
+                "source_evaluation": {"method": "LLM knowledge", "reliability": "medium"},
+                "synthesis": response,
+                "recommendations": recommendations,
+                "confidence_scores": {"overall": "medium", "note": "Based on training data knowledge"},
+                "limitations": ["Limited to training data", "No real-time web data", "Cannot verify current status"],
+                "status": "completed",
+                "timestamp": datetime.now().isoformat()
+            }
+            
+        except Exception as e:
+            return {
+                "error": f"Failed to analyze query: {str(e)}",
+                "status": "failed",
+                "query": query
+            }
+    
+    def _parse_insights_from_text(self, text: str) -> List[str]:
+        """Extract insights from LLM response text."""
+        insights = []
+        lines = text.split('\n')
+        in_insights_section = False
+        
+        for line in lines:
+            line = line.strip()
+            if 'insight' in line.lower() and ':' in line:
+                in_insights_section = True
+                continue
+            elif in_insights_section and line:
+                if line.startswith(('1.', '2.', '3.', '4.', '5.', '-', '•', '*')):
+                    insight = line[2:].strip() if line[1:2] == '.' else line[1:].strip()
+                    if insight:
+                        insights.append(insight)
+                elif line.startswith(('recommendation', 'consider', 'important')):
+                    break
+        
+        return insights[:5]  # Limit to 5 insights
+    
+    def _parse_recommendations_from_text(self, text: str) -> List[str]:
+        """Extract recommendations from LLM response text."""
+        recommendations = []
+        lines = text.split('\n')
+        in_recommendations_section = False
+        
+        for line in lines:
+            line = line.strip()
+            if 'recommendation' in line.lower() and ':' in line:
+                in_recommendations_section = True
+                continue
+            elif in_recommendations_section and line:
+                if line.startswith(('1.', '2.', '3.', '4.', '5.', '-', '•', '*')):
+                    rec = line[2:].strip() if line[1:2] == '.' else line[1:].strip()
+                    if rec:
+                        recommendations.append(rec)
+        
+        return recommendations[:5]  # Limit to 5 recommendations
     
     def _extract_content_text(self, research_data: Dict[str, Any]) -> str:
         """Extract text content from research data for analysis."""
