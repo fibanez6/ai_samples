@@ -1,0 +1,68 @@
+{
+  "openai": {
+    "api_key": "***HIDDEN***",
+    "model": "gpt-4",
+    "temperature": 0.7,
+    "max_tokens": 4000,
+    "timeout": 60,
+    "max_retries": 3
+  },
+  "mcp_server": {
+    "base_url": "http://localhost:8000",
+    "timeout": 30,
+    "max_retries": 3,
+    "health_check_interval": 60
+  },
+  "orchestrator": {
+    "max_retries": 2,
+    "timeout_per_agent": 300,
+    "parallel_execution": false,
+    "cache_enabled": true,
+    "cache_ttl_hours": 24
+  },
+  "research_agent": {
+    "name": "Research Agent",
+    "model": "gpt-4",
+    "temperature": 0.3,
+    "max_tokens": null,
+    "timeout": 60
+  },
+  "analysis_agent": {
+    "name": "Analysis Agent",
+    "model": "gpt-4",
+    "temperature": 0.5,
+    "max_tokens": null,
+    "timeout": 60
+  },
+  "action_agent": {
+    "name": "Action Agent",
+    "model": "gpt-4",
+    "temperature": 0.4,
+    "max_tokens": null,
+    "timeout": 60
+  },
+  "logging": {
+    "level": "INFO",
+    "file_logging": true,
+    "log_file": "orchestrator.log",
+    "max_file_size_mb": 10,
+    "backup_count": 5
+  },
+  "security": {
+    "rate_limit_requests_per_minute": 60,
+    "allowed_domains": [],
+    "blocked_domains": [],
+    "max_content_size_mb": 10,
+    "enable_content_filtering": true
+  },
+  "database": {
+    "db_path": "mcp_data.db",
+    "connection_pool_size": 5,
+    "query_timeout": 30,
+    "backup_enabled": true,
+    "backup_interval_hours": 24
+  },
+  "data_dir": "./data",
+  "cache_dir": "./.cache",
+  "log_dir": "./logs"
+}
