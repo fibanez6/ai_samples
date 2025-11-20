@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Modern multi-agent orchestration with LangGraph, OpenAI Agents, and MCP servers"
 readme = "README.md"
 authors = [
-    { name = "AI Assistant", email = "assistant@example.com" }
+    {name = "Fernando Ibanez", email = "fernando.ibanez.armijo@gmail.com"}
 ]
 requires-python = ">=3.11"
 dependencies = [

@@ -118,14 +118,25 @@ class MultiAgentConfig(BaseModel):
         """Create configuration from environment variables."""
         config_data = {}
         
+        provider = os.getenv('PROVIDER')
+
         # OpenAI configuration
-        if os.getenv('OPENAI_API_KEY'):
+        if provider == 'openai':
             config_data['openai'] = {
                 'api_key': os.getenv('OPENAI_API_KEY'),
                 'model': os.getenv('OPENAI_MODEL', 'gpt-4'),
                 'temperature': float(os.getenv('OPENAI_TEMPERATURE', '0.7')),
                 'max_tokens': int(os.getenv('OPENAI_MAX_TOKENS')) if os.getenv('OPENAI_MAX_TOKENS') else None,
                 'timeout': int(os.getenv('OPENAI_TIMEOUT', '60'))
+            }
+        elif provider == 'github':
+            # Placeholder for other providers
+            config_data['github'] = {
+                'api_key': os.getenv('GITHUB_TOKEN'),
+                'model': os.getenv('GITHUB_MODEL', 'custom-model'),
+                'temperature': float(os.getenv('GITHUB_TEMPERATURE', '0.7')),
+                'max_tokens': int(os.getenv('GITHUB_MAX_TOKENS')) if os.getenv('GITHUB_MAX_TOKENS') else None,
+                'timeout': int(os.getenv('GITHUB_TIMEOUT', '60'))
             }
         
         # MCP Server configuration

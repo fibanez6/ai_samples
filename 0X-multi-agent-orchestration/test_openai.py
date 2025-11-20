@@ -25,7 +25,7 @@ async def test_openai():
         
         # Test with gpt-3.5-turbo model (more reliable)
         llm = ChatOpenAI(
-            model="gpt-3.5-turbo",
+            model="gpt-5-mini",
             temperature=0.7,
             timeout=5  # 5 second timeout
         )
@@ -37,6 +37,11 @@ async def test_openai():
             llm.ainvoke([HumanMessage(content="Say hello")]),
             timeout=10.0
         )
+
+        # response = await asyncio.wait_for(
+        #     llm.ainvoke([HumanMessage(content="make a short description of this url: www.fibanez.com")]),
+        #     timeout=10.0
+        # )
         
         print(f"✅ Success! Response: {response.content}")
         

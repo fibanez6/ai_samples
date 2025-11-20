@@ -1,0 +1,39 @@
+[project]
+name = "ai-samples"
+version = "0.1.0"
+description = "AI agent examples using Python."
+authors = ["Fernando Ibanez <me@fibanez.com>"]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "anthropic>=0.74.1",
+    "azure-identity>=1.25.1",
+    "langchain-text-splitters>=1.0.0",
+    "ollama>=0.6.1",
+    "openai>=2.8.1",
+    "pydantic>=2.12.4",
+    "python-dotenv>=1.2.1",
+    "rich>=14.2.0",
+]
+
+[dependency-groups]
+dev = [
+    "black>=25.11.0",
+    "isort>=7.0.0",
+]
+
+[tool.uv]
+
+[tool.black]
+line-length = 88
+target-version = ["py39", "py310", "py311", "py312", "py313"]
+skip-string-normalization = false
+
+[tool.isort]
+profile = "black"
+line_length = 88
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+
