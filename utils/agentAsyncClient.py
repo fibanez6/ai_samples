@@ -2,11 +2,11 @@ import os
 from abc import ABC
 
 from dotenv import load_dotenv
-from openai import OpenAI
+from openai import AsyncOpenAI
 
 load_dotenv(override=True)
 
-class Agent(ABC):
+class AgentAsyncClient(ABC):
 
     def __init__(self):
         self.name =  os.getenv("AGENT_PROVIDER", "github").lower()
@@ -26,24 +26,25 @@ class Agent(ABC):
             raise ValueError(f"Unsupported agent provider: {self.name}")
        
     def _get_openai_client(self):
-        return OpenAI(api_key=os.environ["OPENAI_KEY"])
+        return AsyncOpenAI(api_key=os.environ["OPENAI_KEY"])
     
     def _get_anthropic_client(self):
         from anthropic import Anthropic
         return Anthropic()
     
     def _get_github_client(self):
-        return OpenAI(
+        return AsyncOpenAI(
             base_url=os.getenv("GITHUB_API_URL", "https://models.github.ai/inference"),
             api_key=os.environ["GITHUB_TOKEN"]
         )
 
     def _get_azure_client(self):
-        import azure.identity
-        token_provider = azure.identity.get_bearer_token_provider(
-            azure.identity.DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default"
+        import azure.identity.aio
+        azure_credential = azure.identity.aio.DefaultAzureCredential()
+        token_provider = azure.identity.aio.get_bearer_token_provider(
+            azure_credential, "https://cognitiveservices.azure.com/.default"
         )
-        return OpenAI(
+        return AsyncOpenAI(
             base_url=os.environ["AZURE_ENDPOINT"],
             api_key=token_provider
         )
@@ -51,4 +52,11 @@ class Agent(ABC):
     def _get_ollama_client(self):
         # from ollama import AsyncClient
         # return AsyncClient(host=os.getenv("OLLAMA_HOST", "http://localhost:11434"))
-        return OpenAI(base_url=os.environ["OLLAMA_HOST"], api_key="nokeyneeded")
+        return AsyncOpenAI(base_url=os.environ["OLLAMA_HOST"], api_key="nokeyneeded")
+    
+    def __del__(self):
+        if self.client is not None:
+            try:
+                self.client.close()
+            except Exception:
+                pass
