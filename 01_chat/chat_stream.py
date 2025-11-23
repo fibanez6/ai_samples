@@ -2,8 +2,6 @@
 Chat Stream: Assistant chat with streaming response and emojis.
 """
 from rich import print
-from rich.live import Live
-from rich.spinner import Spinner
 
 from utils.agentClient import AgentClient
 from utils.print_utils import print_agent_messages
@@ -19,18 +17,16 @@ def main():
 
     print_agent_messages(messages, title=panel_title)
 
-    spinner = Spinner("dots", text="Waiting for the response...")
-    with Live(spinner, refresh_per_second=10):
-        response = agent.client.chat.completions.create(
-            model=agent.model,
-            temperature=0.7,
-            messages=messages,
-            stream=True, # <----- Enable streaming response
-        )
+    agent_response = agent.chat_completion_create(
+        model=agent.model,
+        temperature=0.7,
+        messages=messages,
+        stream=True, # <----- Enable streaming response
+    )
     
-    print("")
+    print("\n")
 
-    for event in response:
+    for event in agent_response:
         if event.choices:
             content = event.choices[0].delta.content
             if content:
