@@ -1,3 +1,5 @@
+import json
+
 from rich import print
 from rich.console import Group
 from rich.json import JSON
@@ -38,6 +40,9 @@ def print_agent_response(response, title: str = "Agent Response"):
         print_message(message.refusal, stats, title="Agent Refusal", style="bold red")
     elif getattr(message, "tool_calls", None):
         print_message_tools(message, stats, title=title)
+    elif getattr(message, "parsed", None):
+        parse = message.parsed.model_dump_json(indent=2)
+        print_message(parse, stats, title=title)
     else:
         print_message(message.content, stats, title=title)
 
@@ -54,8 +59,15 @@ def print_message_tools(message, stats: dict, title: str = "Agent Tool Message")
 def print_message(message: str, stats: dict, title: str = "Agent Message", style: str = "bold green"):
     """Display message and stats in a formatted panel."""
 
+    output = Markdown(message)
+    try:
+        # Try to parse as JSON to check if printable as JSON
+        output = JSON.from_data(json.loads(message))
+    except Exception:
+        pass
+
     response_group = Group(
-        Markdown(message),
+        output,
         JSON.from_data(stats)
     )
     display_panel(

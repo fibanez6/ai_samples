@@ -21,6 +21,14 @@ select: ## Select and run an example
 	@echo "11) tools basic extended"
 	@echo "12) tools stream"
 	@echo "13) tools multiple parallel"
+	@echo "14) tools magentic"
+	@echo "20) structured output basic"
+	@echo "21) structured output pydantic"
+	@echo "22) structured output pydantic description"
+	@echo "23) structured output pydantic enum"
+	@echo "24) structured output pydantic function tool"
+	@echo "25) structured output pydantic nested"
+	@echo "30) rag basic"
 	@read -p "Choose an option: " choice; \
 	case $$choice in \
 		0) make execute example="01_chat.chat_basic" ;; \
@@ -32,6 +40,14 @@ select: ## Select and run an example
 		11) make execute example="02_tools.tools_basic_extended" ;; \
 		12) make execute example="02_tools.tools_stream" ;; \
 		13) make execute example="02_tools.tools_multiple_parallel" ;; \
+		14) make execute example="02_tools.tools_magentic" ;; \
+		20) make execute example="03_structured_outputs.structured_basic" ;; \
+		21) make execute example="03_structured_outputs.structured_pydantic" ;; \
+		22) make execute example="03_structured_outputs.structured_pydantic_description" ;; \
+		23) make execute example="03_structured_outputs.structured_pydantic_enum" ;; \
+		24) make execute example="03_structured_outputs.structured_pydantic_function_tool" ;; \
+		25) make execute example="03_structured_outputs.structured_pydantic_nested" ;; \
+		30) make execute example="05_rag.rag_basic" ;; \
 	esac
 
 install: ## Install dependencies with UV

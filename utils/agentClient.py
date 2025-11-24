@@ -28,7 +28,7 @@ class AgentClient(ABC):
             raise ValueError(f"Unsupported agent provider: {self.name}")
        
     def _get_openai_client(self):
-        return OpenAI(api_key=os.environ["OPENAI_KEY"])
+        return OpenAI(api_key=os.environ["OPENAI_API_KEY"])
     
     def _get_anthropic_client(self):
         from anthropic import Anthropic
@@ -60,6 +60,13 @@ class AgentClient(ABC):
         spinner = Spinner("dots", text=spinner_text)
         with Live(spinner, refresh_per_second=10):
             response = self.client.chat.completions.create(**kwargs)
+        return response
+    
+    def chat_completion_parse(self, **kwargs):
+        spinner_text = kwargs.pop("spinner_text", "Waiting for the response...")
+        spinner = Spinner("dots", text=spinner_text)
+        with Live(spinner, refresh_per_second=10):
+            response = self.client.chat.completions.parse(**kwargs)
         return response
 
     def __del__(self):
