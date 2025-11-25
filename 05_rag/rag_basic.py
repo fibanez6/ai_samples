@@ -5,13 +5,13 @@ import rich
 from chromadb.utils import embedding_functions
 from dotenv import load_dotenv
 
-from utils.agentClient import AgentClient
+from utils.openAIClient import OpenAIClient
 from utils.print_utils import print_agent_messages, print_agent_response
 
 load_dotenv(override=True)
 
 # Initialize Agent Client
-agent = AgentClient()
+agent = OpenAIClient()
 
 # -----------------------------
 # 1. Setup Embedding Function

@@ -7,7 +7,7 @@ import json
 
 from rich import print
 
-from utils.agentClient import AgentClient
+from utils.openAIClient import OpenAIClient
 from utils.print_utils import print_agent_messages, print_agent_response
 
 # --- Define the tool (function) ---
@@ -39,7 +39,7 @@ def lookup_weather(location: str, unit: str = "celsius"):
     }
 
 
-agent = AgentClient()
+agent = OpenAIClient()
 messages = [
     {"role": "system", "content": "You are a weather bot using emojis."},
     {"role": "user", "content": "What's the weather in Tokyo?"}

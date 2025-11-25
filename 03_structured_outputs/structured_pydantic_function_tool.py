@@ -3,12 +3,13 @@ Structured Outputs Pydantic Function Tool Example: Extract structured data from 
 """
 
 import openai
-from pydantic import BaseModel
 import rich
-from utils.agentClient import AgentClient
+from pydantic import BaseModel
+
+from utils.openAIClient import OpenAIClient
 from utils.print_utils import print_agent_messages, print_agent_response
 
-agent = AgentClient()
+agent = OpenAIClient()
 
 
 panel_title = (f"Structured Outputs Pydantic Function Tool - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})")

@@ -3,10 +3,10 @@ Chat Stream: Assistant chat with streaming response and emojis.
 """
 from rich import print
 
-from utils.agentClient import AgentClient
+from utils.openAIClient import OpenAIClient
 from utils.print_utils import print_agent_messages
 
-agent = AgentClient()
+agent = OpenAIClient()
 messages = [
     {"role": "system", "content": "You are an assistant that uses emojis."},
     {"role": "user", "content": "Please tell me a joke about computers."},

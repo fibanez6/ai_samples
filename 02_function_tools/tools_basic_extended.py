@@ -2,11 +2,12 @@
 Tools Basic Extended: Assistant chat using a tool (function) to lookup weather information with emoji responses.
 """
 import json
+
 from rich import print
 from rich.live import Live
 from rich.spinner import Spinner
 
-from utils.agentClient import AgentClient
+from utils.openAIClient import OpenAIClient
 from utils.print_utils import print_agent_messages, print_agent_response
 
 # --- Define the tool (function) ---
@@ -37,7 +38,7 @@ def lookup_weather(location: str, unit: str = "celsius"):
         "description": "clear sky"
     }
 
-agent = AgentClient()
+agent = OpenAIClient()
 messages = [
     {"role": "system", "content": "You are a weather assistant that uses emojis."},
     {"role": "user", "content": "What's the weather like in Sydney right now?"},

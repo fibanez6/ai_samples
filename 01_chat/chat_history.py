@@ -1,10 +1,10 @@
 """
 Chat History: Interactive math assistant chat with message history and rich UI.
 """
-from utils.agentClient import AgentClient
+from utils.openAIClient import OpenAIClient
 from utils.print_utils import print_agent_messages, print_agent_response
 
-agent = AgentClient()
+agent = OpenAIClient()
 messages = [
     {"role": "system", "content": "You are an math teacher assistant that help with math problems and uses emojis."}
 ]

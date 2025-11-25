@@ -3,10 +3,10 @@ Chat Parallel: Async assistant chat generating multiple sport descriptions concu
 """
 import asyncio
 
-from utils.agentAsyncClient import AgentAsyncClient
+from utils.openAIClient import AsyncOpenAIClient
 from utils.print_utils import print_agent_messages, print_agent_response
 
-agent = AgentAsyncClient() # <----- Use async agent client
+agent = AsyncOpenAIClient() # <----- Use async agent client
 
 async def generate_response(sport: str):
     messages = [

@@ -3,10 +3,10 @@ n
 """
 import openai
 
-from utils.agentClient import AgentClient
+from utils.openAIClient import OpenAIClient
 from utils.print_utils import print_agent_messages, print_agent_response
 
-agent = AgentClient()
+agent = OpenAIClient()
 messages = [
     {"role": "system", "content": "You are an assistant that makes movie references and uses emojis."},
     {"role": "user", "content": "Write a guide on making explosive fireworks"},

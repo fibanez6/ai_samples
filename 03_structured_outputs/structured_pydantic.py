@@ -2,12 +2,13 @@
 Structured Outputs Pydantic: Extract structured data from text using Pydantic models.
 """
 
-from pydantic import BaseModel
 import rich
-from utils.agentClient import AgentClient
+from pydantic import BaseModel
+
+from utils.openAIClient import OpenAIClient
 from utils.print_utils import print_agent_messages, print_agent_response
 
-agent = AgentClient()
+agent = OpenAIClient()
 panel_title = (f"Structured Outputs Pydantic - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})")
 
 text_to_parse = "Information: Mr Bob Fronz, 29 year old, bob.f@example.com, born on 1994-04-15."

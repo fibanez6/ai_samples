@@ -2,12 +2,13 @@
 Structured Outputs Pydantic Nested: Extract structured data from text using nested Pydantic models.
 """
 
-from pydantic import BaseModel
 import rich
-from utils.agentClient import AgentClient
+from pydantic import BaseModel
+
+from utils.openAIClient import OpenAIClient
 from utils.print_utils import print_agent_messages, print_agent_response
 
-agent = AgentClient()
+agent = OpenAIClient()
 
 
 panel_title = (f"Structured Outputs Pydantic Nested - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})")

@@ -1,13 +1,13 @@
 """
 
 """
-from concurrent.futures import ThreadPoolExecutor
 import json
+from concurrent.futures import ThreadPoolExecutor
+
 from rich import print
 
-from utils.agentClient import AgentClient
+from utils.openAIClient import OpenAIClient
 from utils.print_utils import print_agent_messages, print_agent_response
-
 
 # --- Define the tool (function) ---
 tools=[
@@ -66,7 +66,7 @@ def lookup_location(city: str):
         return {"error": f"City '{city}' not found in database."}
 
 
-agent = AgentClient()
+agent = OpenAIClient()
 messages = [
     {"role": "system", "content": "You are a weather assistant that uses emojis."},
     {"role": "user", "content": "What's the weather and location in Sydney?"},

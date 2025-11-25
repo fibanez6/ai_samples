@@ -21,7 +21,6 @@ select: ## Select and run an example
 	@echo "11) tools basic extended"
 	@echo "12) tools stream"
 	@echo "13) tools multiple parallel"
-	@echo "14) tools magentic"
 	@echo "20) structured output basic"
 	@echo "21) structured output pydantic"
 	@echo "22) structured output pydantic description"
@@ -36,11 +35,10 @@ select: ## Select and run an example
 		2) make execute example="01_chat.chat_async" ;; \
 		3) make execute example="01_chat.chat_history" ;; \
 		4) make execute example="01_chat.chat_safety" ;; \
-		10) make execute example="02_tools.tools_basic" ;; \
-		11) make execute example="02_tools.tools_basic_extended" ;; \
-		12) make execute example="02_tools.tools_stream" ;; \
-		13) make execute example="02_tools.tools_multiple_parallel" ;; \
-		14) make execute example="02_tools.tools_magentic" ;; \
+		10) make execute example="02_function_tools.tools_basic" ;; \
+		11) make execute example="02_function_tools.tools_basic_extended" ;; \
+		12) make execute example="02_function_tools.tools_stream" ;; \
+		13) make execute example="02_function_tools.tools_multiple_parallel" ;; \
 		20) make execute example="03_structured_outputs.structured_basic" ;; \
 		21) make execute example="03_structured_outputs.structured_pydantic" ;; \
 		22) make execute example="03_structured_outputs.structured_pydantic_description" ;; \
