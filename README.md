@@ -50,6 +50,60 @@ ai_samples/
 	- Reflection pattern and other agentic workflow examples
 
 
+## Resources
+
+- [Microsoft ai-agents-for-beginners](https://github.com/microsoft/ai-agents-for-beginners)
+
+
+## 🛠️ Installation
+
+### Prerequisites
+
+- **Python 3.13+**
+- **uv** (recommended) or **pip** 
+- One of the AI providers configured (see AI Provider Setup below)
+
+### Quick Start
+
+1. **Clone and navigate to the project:**
+   ```bash
+   cd ai-samples
+   ```
+
+2. **Install dependencies:**
+
+   **Option A: Using uv (recommended - fastest):**
+   ```bash
+   # Install uv if not already installed
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   source $HOME/.local/bin/env
+
+   # Sync all dependencies (creates virtual environment automatically)
+   uv sync
+   ```
+
+   **Option B: Traditional pip installation:**
+   ```bash
+   python3.13 -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   pip install --upgrade pip
+   pip install -e .
+   ```
+
+4. **Configure AI provider:**
+   ```bash
+   # Create environment file
+   cp .env.example .env     # If available, or create new .env file
+
+   # Edit .env with your credentials
+   nano .env
+   ```
+
+5. **Run the application:**
+   ```bash
+   make select
+   ```
+
 ## 📜 License
 
 MIT License. See the [LICENSE](LICENSE) file for details.
