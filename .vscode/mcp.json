@@ -9,7 +9,19 @@
         "mcp_basic_server_stdio.py"
       ]
     },
-    "basic-mcp-http": {
+    "basic-http": {
+      "type": "stdio",
+      "command": "uv",
+      "cwd": "${workspaceFolder}/06_mcp",
+      "args": [
+        "run",
+        "mcp_basic_server_http.py"
+      ],
+      "env": {
+        "PORT": "8001"
+      }
+    },
+    "basic-mcp-http-client": {
       "type": "http",
       "url": "http://localhost:8000/mcp"
     },
