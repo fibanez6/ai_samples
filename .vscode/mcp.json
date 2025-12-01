@@ -1,0 +1,33 @@
+{
+  "servers": {
+    "basic-mcp": {
+      "type": "stdio",
+      "command": "uv",
+      "cwd": "${workspaceFolder}/06_mcp",
+      "args": [
+        "run",
+        "mcp_basic_server_stdio.py"
+      ]
+    },
+    "basic-mcp-http": {
+      "type": "http",
+      "url": "http://localhost:8000/mcp"
+    },
+    "basic-mcp-debug": {
+      "type": "stdio",
+      "command": "uv",
+      "cwd": "${workspaceFolder}/06_mcp",
+      "args": [
+        "run",
+        "--",
+        "python",
+        "-m",
+        "debugpy",
+        "--listen",
+        "0.0.0.0:5678",
+        "mcp_basic_server_stdio.py"
+      ]
+    }
+  },
+  "inputs": []
+}

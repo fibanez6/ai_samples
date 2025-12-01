@@ -1,0 +1,13 @@
+{
+    "mcpServers": {
+        "basic-mcp-stdio": {
+            "command": "sh",
+            "args": [
+                "-c",
+                "cd /path/to/ai_samples && uv run python -m 06_mcp.mcp_basic_server_stdio"
+            ],
+            "env": {},
+            "disabled": true
+        }
+    }
+}

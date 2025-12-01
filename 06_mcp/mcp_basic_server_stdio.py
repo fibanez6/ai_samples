@@ -5,10 +5,12 @@ To run this example:
 1. Start the server: `uv run python -m 06_mcp.mcp_basic_stdio`
 2. In a separate terminal, start the FastMCP Inspector: `npx @modelcontextprotocol/inspector .venv/bin/python 06_mcp/mcp_basic_stdio.py`
 """
-from pathlib import Path
-from fastmcp import FastMCP
-from typing import Annotated
+
 from datetime import date
+from pathlib import Path
+from typing import Annotated
+
+from fastmcp import FastMCP
 
 # Define the MCP server
 mcp = FastMCP("Expenses Tracker")
@@ -21,6 +23,7 @@ EXPENSES_FILE = SCRIPT_DIR / "expenses.csv"
 if not EXPENSES_FILE.exists():
     EXPENSES_FILE.write_text("item,date,amount\n")
 
+
 @mcp.tool()
 def add_expense(
     item: Annotated[str, "Description of the expense"],
@@ -32,6 +35,7 @@ def add_expense(
         f.write(f"{item},{date},{amount}\n")
     return f"Added expense: {item} for ${amount}"
 
+
 @mcp.prompt()
 def analyze_spending(
     min_amount: Annotated[float, "Minimum amount to consider in the analysis"],
@@ -40,31 +44,39 @@ def analyze_spending(
     """Analyze spending patterns with optional filters"""
     if not EXPENSES_FILE.exists():
         return "No expenses recorded."
-    
+
     expenses = []
     # Read lines and skip header
-    lines = EXPENSES_FILE.read_text().strip().split('\n')
+    lines = EXPENSES_FILE.read_text().strip().split("\n")
     if len(lines) > 1:
         for line in lines[1:]:
-            if not line: continue
+            if not line:
+                continue
             try:
-                item, date, amount = line.split(',')
+                item, date, amount = line.split(",")
                 amount = float(amount)
-                
-                if amount >= min_amount and (not item_filter or item_filter.lower() in item.lower()):
+
+                if amount >= min_amount and (
+                    not item_filter or item_filter.lower() in item.lower()
+                ):
                     expenses.append(f"- {item}: ${amount}")
             except ValueError:
                 continue
-            
+
     if not expenses:
         return "No expenses found matching the criteria."
-        
-    return f"Please analyze the following expenses and identify any patterns or anomalies:\n\n" + "\n".join(expenses)
+
+    return (
+        f"Please analyze the following expenses and identify any patterns or anomalies:\n\n"
+        + "\n".join(expenses)
+    )
+
 
 @mcp.resource("expenses://list")
 def list_expenses() -> str:
     """List all expenses"""
     return EXPENSES_FILE.read_text()
 
+
 if __name__ == "__main__":
-    mcp.run(transport='stdio')
+    mcp.run(transport="stdio", show_banner=False)

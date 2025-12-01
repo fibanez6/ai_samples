@@ -9,10 +9,12 @@ To run this example:
 2. In a separate terminal, start the FastMCP Inspector: `npx @modelcontextprotocol/inspector http://localhost:8000/mcp`
 """
 
+import os
 from datetime import date
 from pathlib import Path
 from typing import Annotated
 
+from dotenv import load_dotenv
 from fastmcp import FastMCP
 
 # Define the MCP server
@@ -83,4 +85,9 @@ def list_expenses() -> str:
 
 if __name__ == "__main__":
     # Run with SSE transport
-    mcp.run(transport="http", host="0.0.0.0", port=8000)
+    mcp.run(
+        transport="http",
+        host="0.0.0.0",
+        port=int(os.getenv("PORT", "8000")),
+        show_banner=os.getenv("SHOW_BANNER", "true").lower() == "true",
+    )

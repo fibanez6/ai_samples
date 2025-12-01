@@ -205,3 +205,8 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Antigravity MCP config
+# Keep the example template (.gemini/mcp_config.example.json) but ignore actual config
+.gemini/mcp_config.json
+
