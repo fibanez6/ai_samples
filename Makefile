@@ -33,9 +33,10 @@ select: ## Select and run an example
 	@echo "42) mcp basic - server sse"
 	@echo "43) mcp LangChain - client http"
 	@echo "44) mcp LangChain - client sse"
-	@echo "45) mcp inspector - stdio"
-	@echo "46) mcp inspector - http"
-	@echo "47) mcp inspector - sse"
+	@echo "45) mcp LangChain - client github"
+	@echo "46) mcp inspector - stdio"
+	@echo "47) mcp inspector - http"
+	@echo "48) mcp inspector - sse"
 
 	@read -p "Choose an option: " choice; \
 	case $$choice in \
@@ -60,9 +61,10 @@ select: ## Select and run an example
 		42) make execute example="06_mcp.mcp_basic_server_sse" ;; \
 		43) make execute example="06_mcp.mcp_langchain_client_http" ;; \
 		44) make execute example="06_mcp.mcp_langchain_client_sse" ;; \
-		45) npx @modelcontextprotocol/inspector .venv/bin/python 06_mcp/mcp_basic_stdio.py ;; \
-		46) npx @modelcontextprotocol/inspector  http://localhost:8000/mcp ;; \
-		47) npx @modelcontextprotocol/inspector http://localhost:8000/sse ;; \
+		45) make execute example="06_mcp.mcp_langchain_client_github" ;; \
+		46) npx @modelcontextprotocol/inspector .venv/bin/python 06_mcp/mcp_basic_stdio.py ;; \
+		47) npx @modelcontextprotocol/inspector  http://localhost:8000/mcp ;; \
+		48) npx @modelcontextprotocol/inspector http://localhost:8000/sse ;; \
 	esac
 
 install: ## Install dependencies with UV

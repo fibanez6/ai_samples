@@ -19,6 +19,7 @@
   - [Open the inspector in your browser](#4-open-the-inspector-in-your-browser)
   - [Use the inspector to interact with the MCP server](#5-use-the-inspector-to-interact-with-the-mcp-server)
 - [MCP Inspector](#mcp-inspector)
+- [MCP GitHub](#mcp-github)
 - [GitHub Copilot](#github-copilot)
 - [Antigravity](#using-with-antigravity)
 - [References](#references)
@@ -135,6 +136,10 @@ npx @modelcontextprotocol/inspector http://localhost:8000/mcp
 
 ![MCP Basic SSE Inspector Browser](../docs/images/06_mcp/mcp_basic_sse_inspector_browser.png)
 
+
+
+
+
 ## MCP Inspector
 
 The MCP Inspector is a developer tool for testing and debugging MCP servers.
@@ -145,6 +150,17 @@ The inspector provides a web interface to:
 - Test tool invocations with custom parameters
 - Inspect server responses and errors
 - Debug server communication
+
+## MCP GitHub
+
+### Run MCP GitHub Copilot
+
+```bash
+uv run python -m 06_mcp.mcp_langchain_client_github
+```
+
+![MCP LangChain Client GitHub Run](../docs/images/06_mcp/mcp_langchain_client_github_run.png)
+
 
 ## Using with GitHub Copilot
 

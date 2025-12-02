@@ -39,7 +39,38 @@
         "0.0.0.0:5678",
         "mcp_basic_server_stdio.py"
       ]
-    }
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${input:github_mcp_pat}"
+      }
+    },
+    "local-github-server": {
+      "command": "docker",
+      "args": [
+      "run",
+      "-i",
+      "--rm",
+      "-e",
+      "GITHUB_PERSONAL_ACCESS_TOKEN",
+      "-e",
+      "GITHUB_HOST",
+      "ghcr.io/github/github-mcp-server"
+      ],
+      "env": {
+          "GITHUB_PERSONAL_ACCESS_TOKEN": "${input:github_token}",
+          "GITHUB_HOST": "https://<your GHES or ghe.com domain name>"
+      }
+}
   },
-  "inputs": []
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "github_mcp_pat",
+      "description": "GitHub Personal Access Token",
+      "password": true
+    }
+  ]
 }

@@ -1,4 +1,8 @@
-""" """
+"""
+Run an agent that uses the MCP client to interact with the MCP server.
+
+reference: https://github.com/Azure-Samples/python-mcp-demo/tree/main
+"""
 
 import asyncio
 import logging
