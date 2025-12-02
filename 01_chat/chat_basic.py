@@ -1,16 +1,23 @@
 """
 Chat Basic: Simple assistant chat with movie references and emojis.
 """
-from utils.openAIClient import OpenAIClient
-from utils.print_utils import print_agent_messages, print_agent_response
+
+from agents.openAIClient import OpenAIClient
+from utils.openAI_print_utils import print_agent_messages, print_agent_response
 
 agent = OpenAIClient()
 messages = [
-    {"role": "system", "content": "You are an assistant that makes movie references and uses emojis."},
+    {
+        "role": "system",
+        "content": "You are an assistant that makes movie references and uses emojis.",
+    },
     {"role": "user", "content": "What happens today in Melbourne?"},
 ]
 
-panel_title = (f"Chat Basic - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})")
+panel_title = (
+    f"Chat Basic - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})"
+)
+
 
 def main():
 
@@ -23,6 +30,7 @@ def main():
     )
 
     print_agent_response(agent_response)
+
 
 if __name__ == "__main__":
     main()

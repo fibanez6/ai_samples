@@ -1,1 +1,1 @@
-# Package initializer for the agent framework module.
+# Package initializer for the Microsoft Agent Framework OpenAI module.

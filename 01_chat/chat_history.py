@@ -1,15 +1,22 @@
 """
 Chat History: Interactive math assistant chat with message history and rich UI.
 """
-from utils.openAIClient import OpenAIClient
-from utils.print_utils import print_agent_messages, print_agent_response
+
+from agents.openAIClient import OpenAIClient
+from utils.openAI_print_utils import print_agent_messages, print_agent_response
 
 agent = OpenAIClient()
 messages = [
-    {"role": "system", "content": "You are an math teacher assistant that help with math problems and uses emojis."}
+    {
+        "role": "system",
+        "content": "You are an math teacher assistant that help with math problems and uses emojis.",
+    }
 ]
 
-panel_title = (f"Chat History - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})")
+panel_title = (
+    f"Chat History - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})"
+)
+
 
 def main():
 
@@ -26,7 +33,10 @@ def main():
         )
 
         print_agent_response(agent_response)
-        messages.append({"role": "assistant", "content": agent_response.choices[0].message.content})
+        messages.append(
+            {"role": "assistant", "content": agent_response.choices[0].message.content}
+        )
+
 
 if __name__ == "__main__":
     try:

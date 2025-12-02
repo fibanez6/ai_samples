@@ -7,8 +7,8 @@ import json
 
 from rich import print
 
-from utils.openAIClient import OpenAIClient
-from utils.print_utils import print_agent_messages, print_agent_response
+from agents.openAIClient import OpenAIClient
+from utils.openAI_print_utils import print_agent_messages, print_agent_response
 
 # --- Define the tool (function) ---
 tools = [
@@ -42,12 +42,13 @@ def lookup_weather(location: str, unit: str = "celsius"):
 agent = OpenAIClient()
 messages = [
     {"role": "system", "content": "You are a weather bot using emojis."},
-    {"role": "user", "content": "What's the weather in Tokyo?"}
+    {"role": "user", "content": "What's the weather in Tokyo?"},
 ]
-panel_title = f"Tools Stream - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})"
-available_functions = {
-    "lookup_weather": lookup_weather
-}
+panel_title = (
+    f"Tools Stream - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})"
+)
+available_functions = {"lookup_weather": lookup_weather}
+
 
 # -----------------------------------------------------------------------------
 def stream_with_tools(messages):
@@ -81,7 +82,7 @@ def stream_with_tools(messages):
         if delta.content:
             content_buffer += delta.content
 
-        # --- 2. TOOL CALL STREAM ---   
+        # --- 2. TOOL CALL STREAM ---
         if delta.tool_calls:
             tc = delta.tool_calls[0]  # only one per chunk
             func = tc.function
@@ -101,16 +102,19 @@ def stream_with_tools(messages):
 
     # Build object exactly like your ToolCall type wrapper
     print("\n\n--- Tool call captured ---\n")
-    print(f"[green]Tool call message: id={current_call_id}, name={current_call_name}, arguments={args_buffer}[/green]")
+    print(
+        f"[green]Tool call message: id={current_call_id}, name={current_call_name}, arguments={args_buffer}[/green]"
+    )
 
     return {
         "content": content_buffer,
         "tool_call": {
             "id": current_call_id,
             "name": current_call_name,
-            "arguments": args_buffer
-        }
+            "arguments": args_buffer,
+        },
     }
+
 
 # -----------------------------------------------------------------------------
 def main():
@@ -121,33 +125,37 @@ def main():
     if not tool_call["name"]:
         print("[red]No tool calls detected.[/red]")
         return
-    
+
     # Step 2 - Append ASSISTANT TOOL CALL MESSAGE (no intermediate assistant content!)
-    messages.append({
-        "role": "assistant",
-        "tool_calls": [
-            {
-                "id": tool_call["id"],
-                "type": "function",
-                "function": {
-                    "name": tool_call["name"],
-                    "arguments": tool_call["arguments"],
+    messages.append(
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": tool_call["id"],
+                    "type": "function",
+                    "function": {
+                        "name": tool_call["name"],
+                        "arguments": tool_call["arguments"],
+                    },
                 }
-            }
-        ],
-        "content": None
-    })
+            ],
+            "content": None,
+        }
+    )
 
     # Step 3 — Execute tool calls
     call_args = json.loads(tool_call["arguments"])
     func = available_functions[tool_call["name"]]
     result = func(**call_args)
 
-    messages.append({
-        "role": "tool",
-        "tool_call_id": tool_call["id"],
-        "content": json.dumps(result),
-    })
+    messages.append(
+        {
+            "role": "tool",
+            "tool_call_id": tool_call["id"],
+            "content": json.dumps(result),
+        }
+    )
 
     # Step 4 — Final assistant reply
     print("\n--- Final assistant reply ---\n")
@@ -162,7 +170,6 @@ def main():
     )
 
     print_agent_response(followup)
-
 
 
 # -----------------------------------------------------------------------------

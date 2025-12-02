@@ -1,20 +1,28 @@
 """
 Chat Parallel: Async assistant chat generating multiple sport descriptions concurrently.
 """
+
 import asyncio
 
-from utils.openAIClient import AsyncOpenAIClient
-from utils.print_utils import print_agent_messages, print_agent_response
+from agents.openAIClient import AsyncOpenAIClient
+from utils.openAI_print_utils import print_agent_messages, print_agent_response
 
-agent = AsyncOpenAIClient() # <----- Use async agent client
+agent = AsyncOpenAIClient()  # <----- Use async agent client
+
 
 async def generate_response(sport: str):
     messages = [
-        {"role": "system", "content": "You are an assistant that makes meme references and uses emojis."},
-        {"role": "user", "content": f"Generate a short description of {sport} as a sport"},
+        {
+            "role": "system",
+            "content": "You are an assistant that makes meme references and uses emojis.",
+        },
+        {
+            "role": "user",
+            "content": f"Generate a short description of {sport} as a sport",
+        },
     ]
 
-    panel_title = (f"Chat Async - {sport} - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})")
+    panel_title = f"Chat Async - {sport} - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})"
 
     print_agent_messages(messages, title=panel_title)
 
@@ -22,11 +30,12 @@ async def generate_response(sport: str):
         model=agent.model,
         temperature=0.7,
         messages=messages,
-        spinner_text=f"Waiting for the response for {sport}..."
+        spinner_text=f"Waiting for the response for {sport}...",
     )
 
-    panel_title = (f"Agent Response for sport: {sport}")
+    panel_title = f"Agent Response for sport: {sport}"
     print_agent_response(agent_response, title=panel_title)
+
 
 async def main():
     try:
@@ -37,6 +46,7 @@ async def main():
         )
     finally:
         await agent.client.close()
+
 
 if __name__ == "__main__":
     asyncio.run(main())

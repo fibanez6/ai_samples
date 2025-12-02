@@ -1,17 +1,18 @@
 """
 Tools Basic Extended: Assistant chat using a tool (function) to lookup weather information with emoji responses.
 """
+
 import json
 
 from rich import print
 from rich.live import Live
 from rich.spinner import Spinner
 
-from utils.openAIClient import OpenAIClient
-from utils.print_utils import print_agent_messages, print_agent_response
+from agents.openAIClient import OpenAIClient
+from utils.openAI_print_utils import print_agent_messages, print_agent_response
 
 # --- Define the tool (function) ---
-tools=[
+tools = [
     {
         "type": "function",
         "function": {
@@ -23,11 +24,12 @@ tools=[
                     "location": {"type": "string"},
                     "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
                 },
-                "required": ["location"]
+                "required": ["location"],
             },
         },
     }
 ]
+
 
 def lookup_weather(location: str, unit: str = "celsius"):
     # Dummy implementation
@@ -35,8 +37,9 @@ def lookup_weather(location: str, unit: str = "celsius"):
         "location": location,
         "temperature": 22,
         "unit": unit,
-        "description": "clear sky"
+        "description": "clear sky",
     }
+
 
 agent = OpenAIClient()
 messages = [
@@ -44,7 +47,8 @@ messages = [
     {"role": "user", "content": "What's the weather like in Sydney right now?"},
 ]
 
-panel_title = (f"Tools Basic Extended - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})")
+panel_title = f"Tools Basic Extended - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})"
+
 
 def main():
     print_agent_messages(messages, title=panel_title)
@@ -66,7 +70,7 @@ def main():
 
         # Execute the tool based on the tool call
         if tool_call.function.name == "lookup_weather":
-            
+
             # Append the assistant's message with the tool call to the messages
             messages.append(agent_response.choices[0].message)
 
@@ -74,7 +78,13 @@ def main():
             weather_info = lookup_weather(**args)
 
             # Append the tool's response to the messages
-            messages.append({"role": "tool", "tool_call_id": tool_call.id, "content": str(weather_info)})
+            messages.append(
+                {
+                    "role": "tool",
+                    "tool_call_id": tool_call.id,
+                    "content": str(weather_info),
+                }
+            )
 
             # Get a final response from the agent after tool execution
             final_response = agent.chat_completion_create(
@@ -88,6 +98,7 @@ def main():
             print_agent_response(final_response)
     else:
         print(agent_response.choices[0].message.content)
+
 
 if __name__ == "__main__":
     main()

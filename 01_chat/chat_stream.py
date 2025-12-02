@@ -1,17 +1,21 @@
 """
 Chat Stream: Assistant chat with streaming response and emojis.
 """
+
 from rich import print
 
-from utils.openAIClient import OpenAIClient
-from utils.print_utils import print_agent_messages
+from agents.openAIClient import OpenAIClient
+from utils.openAI_print_utils import print_agent_messages
 
 agent = OpenAIClient()
 messages = [
     {"role": "system", "content": "You are an assistant that uses emojis."},
     {"role": "user", "content": "Please tell me a joke about computers."},
 ]
-panel_title = (f"Chat Stream - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})")
+panel_title = (
+    f"Chat Stream - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})"
+)
+
 
 def main():
 
@@ -21,9 +25,9 @@ def main():
         model=agent.model,
         temperature=0.7,
         messages=messages,
-        stream=True, # <----- Enable streaming response
+        stream=True,  # <----- Enable streaming response
     )
-    
+
     print("\n")
 
     for event in agent_response:
@@ -31,6 +35,7 @@ def main():
             content = event.choices[0].delta.content
             if content:
                 print(content, end="", flush=True)
+
 
 if __name__ == "__main__":
     main()

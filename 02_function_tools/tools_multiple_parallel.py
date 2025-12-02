@@ -1,16 +1,15 @@
-"""
+""" """
 
-"""
 import json
 from concurrent.futures import ThreadPoolExecutor
 
 from rich import print
 
-from utils.openAIClient import OpenAIClient
-from utils.print_utils import print_agent_messages, print_agent_response
+from agents.openAIClient import OpenAIClient
+from utils.openAI_print_utils import print_agent_messages, print_agent_response
 
 # --- Define the tool (function) ---
-tools=[
+tools = [
     {
         "type": "function",
         "function": {
@@ -22,7 +21,7 @@ tools=[
                     "location": {"type": "string"},
                     "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
                 },
-                "required": ["location"]
+                "required": ["location"],
             },
         },
     },
@@ -36,11 +35,12 @@ tools=[
                 "properties": {
                     "city": {"type": "string", "description": "City name to look up."}
                 },
-                "required": ["city"]
-            }
-        }
-    }
+                "required": ["city"],
+            },
+        },
+    },
 ]
+
 
 def lookup_weather(location: str, unit: str = "celsius"):
     # Dummy implementation
@@ -48,8 +48,9 @@ def lookup_weather(location: str, unit: str = "celsius"):
         "location": location,
         "temperature": 22,
         "unit": unit,
-        "description": "clear sky"
+        "description": "clear sky",
     }
+
 
 def lookup_location(city: str):
     """Dummy geocoding tool."""
@@ -72,13 +73,14 @@ messages = [
     {"role": "user", "content": "What's the weather and location in Sydney?"},
 ]
 
-panel_title = (f"Tools Multiple Parallel - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})")
+panel_title = f"Tools Multiple Parallel - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})"
 
 # Map function names to actual functions
 available_functions = {
     "lookup_weather": lookup_weather,
     "lookup_location": lookup_location,
 }
+
 
 def main():
     print_agent_messages(messages, title=panel_title)
@@ -126,7 +128,13 @@ def main():
             # Add each tool result to the conversation
             for tool_call, function_name, future in futures:
                 result = future.result()
-                messages.append({"role": "tool", "tool_call_id": tool_call.id, "content": json.dumps(result)})
+                messages.append(
+                    {
+                        "role": "tool",
+                        "tool_call_id": tool_call.id,
+                        "content": json.dumps(result),
+                    }
+                )
 
         print("\n[bold green]Tool results added to the conversation.[/bold green]\n")
 
@@ -136,13 +144,14 @@ def main():
             temperature=0.7,
             messages=messages,
             tools=tools,
-            tool_choice="auto"
+            tool_choice="auto",
         )
 
         # Display the final response
         print_agent_response(final_response)
     else:
         print(agent_response.choices[0].message.content)
+
 
 if __name__ == "__main__":
     main()

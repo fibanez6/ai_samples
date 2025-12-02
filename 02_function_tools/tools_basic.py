@@ -1,15 +1,16 @@
 """
 Basic example of using an agent with tools.
 """
+
 import json
 
 from rich import print
 
-from utils.openAIClient import OpenAIClient
-from utils.print_utils import print_agent_messages, print_agent_response
+from agents.openAIClient import OpenAIClient
+from utils.openAI_print_utils import print_agent_messages, print_agent_response
 
 # --- Define the tool (function) ---
-tools=[
+tools = [
     {
         "type": "function",
         "function": {
@@ -21,11 +22,12 @@ tools=[
                     "location": {"type": "string"},
                     "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
                 },
-                "required": ["location"]
+                "required": ["location"],
             },
         },
     }
 ]
+
 
 def lookup_weather(location: str, unit: str = "celsius"):
     # Dummy implementation
@@ -33,8 +35,9 @@ def lookup_weather(location: str, unit: str = "celsius"):
         "location": location,
         "temperature": 22,
         "unit": unit,
-        "description": "clear sky"
+        "description": "clear sky",
     }
+
 
 agent = OpenAIClient()
 messages = [
@@ -42,7 +45,10 @@ messages = [
     {"role": "user", "content": "What's the weather like in Sydney right now?"},
 ]
 
-panel_title = (f"Tools Basic - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})")
+panel_title = (
+    f"Tools Basic - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})"
+)
+
 
 def main():
 
@@ -70,6 +76,7 @@ def main():
             print(f"[bold green]Weather Info:[/bold green] {weather_info}")
     else:
         print(agent_response.choices[0].message.content)
+
 
 if __name__ == "__main__":
     main()

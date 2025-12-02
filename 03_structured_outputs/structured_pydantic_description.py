@@ -5,19 +5,28 @@ Structured Outputs Pydantic: Extract structured data from text using Pydantic mo
 import rich
 from pydantic import BaseModel, Field
 
-from utils.openAIClient import OpenAIClient
-from utils.print_utils import print_agent_messages, print_agent_response
+from agents.openAIClient import OpenAIClient
+from utils.openAI_print_utils import print_agent_messages, print_agent_response
 
 agent = OpenAIClient()
 
 
-panel_title = (f"Structured Outputs Pydantic Description - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})")
+panel_title = f"Structured Outputs Pydantic Description - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})"
 
-text_to_parse = "Information: Mr Bob Fronz, 29 year old, bob.f@example.com, born on 1994-04-15."
+text_to_parse = (
+    "Information: Mr Bob Fronz, 29 year old, bob.f@example.com, born on 1994-04-15."
+)
 messages = [
-    {"role": "system", "content": "You are an assistant that helps with structured data. Extract name, age, email, and birthdate from the text and return as JSON."},
-    {"role": "user", "content": f"Extract name, age, email, and birthdate from this text: {text_to_parse}"},
+    {
+        "role": "system",
+        "content": "You are an assistant that helps with structured data. Extract name, age, email, and birthdate from the text and return as JSON.",
+    },
+    {
+        "role": "user",
+        "content": f"Extract name, age, email, and birthdate from this text: {text_to_parse}",
+    },
 ]
+
 
 class PersonInfo(BaseModel):
     givenName: str = Field(..., description="The given name of the person")
@@ -25,6 +34,7 @@ class PersonInfo(BaseModel):
     age: int = Field(..., description="The age in years")
     email: str = Field(..., description="An email address")
     birthdate: str = Field(..., description="A date in the format YYYY-MM-DD")
+
 
 def main():
 
@@ -34,7 +44,7 @@ def main():
         model=agent.model,
         temperature=0.7,
         messages=messages,
-        response_format=PersonInfo # <----- Use the Pydantic model here
+        response_format=PersonInfo,  # <----- Use the Pydantic model here
     )
 
     print_agent_response(agent_response)
@@ -45,6 +55,7 @@ def main():
     else:
         event = message.parsed
         rich.print(event)
+
 
 if __name__ == "__main__":
     main()
