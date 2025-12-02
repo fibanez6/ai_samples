@@ -37,10 +37,10 @@ select: ## Select and run an example
 	@echo "506) mcp inspector - stdio"
 	@echo "507) mcp inspector - http"
 	@echo "508) mcp inspector - sse"
-	@echo "700) microsoft agent framework - azure ai - basic chat"	
-	@echo "701) microsoft agent framework - azure ai - basic chat stream"
-	@echo "702) microsoft agent framework - azure ai - basic agent"	
-	@echo "703) microsoft agent framework - azure ai - basic agent stream"
+	@echo "700) microsoft agent framework - azure ai - basic chat message"	
+	@echo "701) microsoft agent framework - azure ai - basic chat message stream"
+	@echo "702) microsoft agent framework - azure ai - basic chat agent"	
+	@echo "703) microsoft agent framework - azure ai - basic chat agent stream"
 	@echo "704) microsoft agent framework - azure ai - structured output"
 	@echo "705) microsoft agent framework - azure ai - function tools"
 	@echo "706) microsoft agent framework - azure ai - function tools human approval"
@@ -84,10 +84,10 @@ select: ## Select and run an example
 		506) npx @modelcontextprotocol/inspector .venv/bin/python 05_mcp/mcp_basic_stdio.py ;; \
 		507) npx @modelcontextprotocol/inspector  http://localhost:8000/mcp ;; \
 		508) npx @modelcontextprotocol/inspector http://localhost:8000/sse ;; \
-		700) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_basic_chat" ;; \
-		701) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_basic_chat_stream" ;; \
-		702) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_basic_agent" ;; \
-		703) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_basic_agent_stream" ;; \
+		700) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_basic_chat_message" ;; \
+		701) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_basic_chat_message_stream" ;; \
+		702) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_basic_chat_agent" ;; \
+		703) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_basic_chat_agent_stream" ;; \
 		704) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_structured_output" ;; \
 		705) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_function_tools" ;; \
 		706) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_function_tools_human_approval" ;; \
