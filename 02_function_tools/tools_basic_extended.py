@@ -9,7 +9,7 @@ from rich.live import Live
 from rich.spinner import Spinner
 
 from agents.openAIClient import OpenAIClient
-from utils.openAI_print_utils import print_agent_messages, print_agent_response
+from utils.print_utils import print_agent_messages, print_agent_response
 
 # --- Define the tool (function) ---
 tools = [

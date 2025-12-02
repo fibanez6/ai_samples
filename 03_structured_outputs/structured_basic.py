@@ -3,7 +3,7 @@ Structured Outputs Basic: Extract structured data from text using JSON Schema.
 """
 
 from agents.openAIClient import OpenAIClient
-from utils.openAI_print_utils import print_agent_messages, print_agent_response
+from utils.print_utils import print_agent_messages, print_agent_response
 
 agent = OpenAIClient()
 panel_title = f"Structured Outputs Basic - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})"

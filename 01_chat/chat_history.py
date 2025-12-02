@@ -3,7 +3,7 @@ Chat History: Interactive math assistant chat with message history and rich UI.
 """
 
 from agents.openAIClient import OpenAIClient
-from utils.openAI_print_utils import print_agent_messages, print_agent_response
+from utils.print_utils import print_agent_messages, print_agent_response
 
 agent = OpenAIClient()
 messages = [

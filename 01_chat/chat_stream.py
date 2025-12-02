@@ -5,7 +5,7 @@ Chat Stream: Assistant chat with streaming response and emojis.
 from rich import print
 
 from agents.openAIClient import OpenAIClient
-from utils.openAI_print_utils import print_agent_messages
+from utils.print_utils import print_agent_messages
 
 agent = OpenAIClient()
 messages = [

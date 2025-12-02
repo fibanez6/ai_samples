@@ -5,7 +5,7 @@ Chat Parallel: Async assistant chat generating multiple sport descriptions concu
 import asyncio
 
 from agents.openAIClient import AsyncOpenAIClient
-from utils.openAI_print_utils import print_agent_messages, print_agent_response
+from utils.print_utils import print_agent_messages, print_agent_response
 
 agent = AsyncOpenAIClient()  # <----- Use async agent client
 

@@ -6,7 +6,7 @@ from chromadb.utils import embedding_functions
 from dotenv import load_dotenv
 
 from agents.openAIClient import OpenAIClient
-from utils.openAI_print_utils import print_agent_messages, print_agent_response
+from utils.print_utils import print_agent_messages, print_agent_response
 
 load_dotenv(override=True)
 
