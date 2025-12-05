@@ -5,8 +5,9 @@ on:
     branches:
       - main
       - develop
+      - 'feature/**'
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, reopened]
 
 jobs:
   claude-review:
@@ -14,6 +15,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      issues: write
     
     steps:
       - name: Checkout code
@@ -21,116 +23,165 @@ jobs:
         with:
           fetch-depth: 0
       
-      - name: Get changed files
-        id: changed-files
-        run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} > changed_files.txt
-          else
-            git diff --name-only HEAD~1 HEAD > changed_files.txt
-          fi
-          echo "Files changed:"
-          cat changed_files.txt
+      - name: Setup script permissions
+        run: chmod +x scripts/claude-review.sh
       
-      - name: Get file diffs
-        id: get-diffs
+      - name: Get changed files and diff
+        id: get-diff
         run: |
-          echo "DIFFS<<EOF" >> $GITHUB_OUTPUT
           if [ "${{ github.event_name }}" == "pull_request" ]; then
-            git diff ${{ github.event.pull_request.base.sha }} ${{ github.sha }}
+            echo "Getting PR diff..."
+            git diff ${{ github.event.pull_request.base.sha }}..${{ github.sha }} > diff.txt
+            
+            # Get list of changed files
+            git diff --name-only ${{ github.event.pull_request.base.sha }}..${{ github.sha }} > changed_files.txt
           else
-            git diff HEAD~1 HEAD
-          fi >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+            echo "Getting push diff..."
+            # For push events, compare with previous commit
+            if git rev-parse HEAD~1 >/dev/null 2>&1; then
+              git diff HEAD~1 HEAD > diff.txt
+              git diff --name-only HEAD~1 HEAD > changed_files.txt
+            else
+              # First commit in repo
+              git show HEAD > diff.txt
+              git diff-tree --no-commit-id --name-only -r HEAD > changed_files.txt
+            fi
+          fi
+          
+          # Display changed files
+          echo "Changed files:"
+          cat changed_files.txt
+          
+          # Check if diff is empty
+          if [ ! -s diff.txt ]; then
+            echo "No changes detected"
+            echo "HAS_CHANGES=false" >> $GITHUB_OUTPUT
+          else
+            echo "HAS_CHANGES=true" >> $GITHUB_OUTPUT
+            # Show diff size
+            DIFF_SIZE=$(wc -l < diff.txt)
+            echo "Diff size: $DIFF_SIZE lines"
+          fi
       
       - name: Review code with Claude
+        if: steps.get-diff.outputs.HAS_CHANGES == 'true'
         id: claude-review
         run: |
-          DIFF="${{ steps.get-diffs.outputs.DIFFS }}"
+          # Run the review script
+          ./scripts/claude-review.sh diff.txt review.md
           
-          # Create the prompt for Claude
-          PROMPT="You are a senior code reviewer. Review the following code changes and provide:
-          1. A summary of the changes
-          2. Potential bugs or issues
-          3. Security concerns
-          4. Performance improvements
-          5. Best practice suggestions
-          6. Specific line-by-line suggestions in the format: 'File: filename.ext, Line: X - Suggestion: your suggestion'
-          
-          Here are the code changes:
-          \`\`\`diff
-          ${DIFF}
-          \`\`\`
-          
-          Provide your review in markdown format."
-          
-          # Call Claude API
-          RESPONSE=$(curl -s https://api.anthropic.com/v1/messages \
-            -H "Content-Type: application/json" \
-            -H "x-api-key: ${{ secrets.ANTHROPIC_API_KEY }}" \
-            -H "anthropic-version: 2023-06-01" \
-            -d '{
-              "model": "claude-sonnet-4-20250514",
-              "max_tokens": 4096,
-              "messages": [{
-                "role": "user",
-                "content": "'"${PROMPT//\"/\\\"}"'"
-              }]
-            }')
-          
-          # Extract the review text
-          REVIEW=$(echo "$RESPONSE" | jq -r '.content[0].text')
-          
-          # Save review to file
-          echo "$REVIEW" > review.md
-          echo "Review saved to review.md"
-          
-          # Save for next step
-          echo "REVIEW<<EOF" >> $GITHUB_OUTPUT
-          echo "$REVIEW" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          # Capture the review output for GitHub Actions
+          if [ -f review.md ]; then
+            echo "REVIEW<<EOFMARKER" >> $GITHUB_OUTPUT
+            cat review.md >> $GITHUB_OUTPUT
+            echo "EOFMARKER" >> $GITHUB_OUTPUT
+            
+            echo "✅ Review completed successfully"
+          else
+            echo "❌ Review file not created"
+            exit 1
+          fi
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       
-      - name: Create or update PR with suggestions
-        if: github.event_name == 'push'
+      - name: Upload review artifact
+        if: steps.get-diff.outputs.HAS_CHANGES == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: claude-review-${{ github.sha }}
+          path: |
+            review.md
+            diff.txt
+            changed_files.txt
+          retention-days: 30
+      
+      - name: Comment on PR
+        if: github.event_name == 'pull_request' && steps.get-diff.outputs.HAS_CHANGES == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const review = `## 🤖 Claude AI Code Review
+            
+            ${{ steps.claude-review.outputs.REVIEW }}
+            
+            ---
+            <details>
+            <summary>ℹ️ Review Details</summary>
+            
+            - **Commit**: \`${{ github.sha }}\`
+            - **Model**: Claude Sonnet 4
+            - **Triggered by**: ${{ github.event_name }}
+            
+            </details>
+            
+            *Automated review • [View full diff](${{ github.event.pull_request.html_url }}/files)*`;
+            
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: review
+            });
+      
+      - name: Create or update PR for push
+        if: github.event_name == 'push' && github.ref_name != 'main' && steps.get-diff.outputs.HAS_CHANGES == 'true'
         run: |
-          # Check if a PR already exists for this branch
           BRANCH_NAME="${{ github.ref_name }}"
           BASE_BRANCH="main"
           
-          PR_EXISTS=$(gh pr list --head "$BRANCH_NAME" --base "$BASE_BRANCH" --json number --jq '.[0].number')
+          echo "Checking for existing PR from $BRANCH_NAME to $BASE_BRANCH..."
           
-          if [ -z "$PR_EXISTS" ]; then
-            # Create new PR
+          # Check if PR already exists
+          PR_NUMBER=$(gh pr list \
+            --head "$BRANCH_NAME" \
+            --base "$BASE_BRANCH" \
+            --json number \
+            --jq '.[0].number' 2>/dev/null || echo "")
+          
+          # Prepare PR body
+          PR_BODY="## 🤖 Automated Code Review by Claude
+
+          ${{ steps.claude-review.outputs.REVIEW }}
+
+          ---
+          ### 📊 Review Information
+          - **Branch**: \`$BRANCH_NAME\`
+          - **Commit**: \`${{ github.sha }}\`
+          - **Triggered by**: Push event
+          - **Model**: Claude Sonnet 4
+
+          *This PR was automatically created based on code changes. Review the suggestions above and merge when ready.*"
+          
+          if [ -z "$PR_NUMBER" ]; then
+            echo "Creating new PR..."
             gh pr create \
               --title "🤖 Claude Review: Updates to $BRANCH_NAME" \
-              --body "## Automated Code Review by Claude
-
-          ${{ steps.claude-review.outputs.REVIEW }}
-
-          ---
-          *This PR was automatically created by Claude AI based on recent changes.*" \
+              --body "$PR_BODY" \
               --base "$BASE_BRANCH" \
-              --head "$BRANCH_NAME"
+              --head "$BRANCH_NAME" \
+              --label "automated-review" \
+              2>/dev/null || echo "⚠️ Could not create PR (may already exist or branch is up to date)"
           else
-            # Update existing PR
-            gh pr comment "$PR_EXISTS" --body "## Updated Code Review by Claude
+            echo "PR #$PR_NUMBER already exists. Adding comment..."
+            gh pr comment "$PR_NUMBER" --body "## 🔄 Updated Code Review
 
           ${{ steps.claude-review.outputs.REVIEW }}
 
           ---
-          *Review updated: $(date)*"
+          *Review updated: $(date -u '+%Y-%m-%d %H:%M:%S UTC')*
+          *Commit*: \`${{ github.sha }}\`"
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Comment on existing PR
-        if: github.event_name == 'pull_request'
+      - name: Report status
+        if: always()
         run: |
-          gh pr comment ${{ github.event.pull_request.number }} --body "## 🤖 Claude Code Review
-
-          ${{ steps.claude-review.outputs.REVIEW }}
-
-          ---
-          *Automated review by Claude AI*"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          if [ "${{ steps.get-diff.outputs.HAS_CHANGES }}" == "false" ]; then
+            echo "ℹ️ No changes detected - skipping review"
+          elif [ "${{ steps.claude-review.outcome }}" == "success" ]; then
+            echo "✅ Claude review completed successfully"
+          else
+            echo "❌ Claude review failed"
+            exit 1
+          fi
