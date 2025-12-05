@@ -24,7 +24,7 @@ jobs:
           fetch-depth: 0
       
       - name: Setup script permissions
-        run: chmod +x scripts/claude-review.sh
+        run: chmod +x .github/scripts/claude-review.sh
       
       - name: Get changed files and diff
         id: get-diff
@@ -68,7 +68,7 @@ jobs:
         id: claude-review
         run: |
           # Run the review script
-          ./scripts/claude-review.sh diff.txt review.md
+          ./.github/scripts/claude-review.sh diff.txt review.md
           
           # Capture the review output for GitHub Actions
           if [ -f review.md ]; then
