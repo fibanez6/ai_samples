@@ -1,11 +1,11 @@
 name: AI Code Review
 
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - '**.py'
+# on:
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       - '**.py'
 
 permissions:
   contents: write

@@ -84,7 +84,7 @@ def main():
         sys.exit(1)
 
     client = OpenAI(
-        base_url="https://models.inference.ai.azure.com",
+        base_url="https://models.github.ai/inference",
         api_key=api_key,
     )
 
