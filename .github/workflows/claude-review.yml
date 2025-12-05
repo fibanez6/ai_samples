@@ -1,4 +1,4 @@
-name: Claude Code Review with GitHub MCP
+name: Claude Code Review
 
 on:
   push:
@@ -14,7 +14,6 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      issues: write
     
     steps:
       - name: Checkout code
@@ -22,176 +21,109 @@ jobs:
         with:
           fetch-depth: 0
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      
-      - name: Install MCP GitHub Server
-        run: |
-          npm install -g @modelcontextprotocol/server-github
-      
-      - name: Get PR or Push Context
-        id: context
+      - name: Get changed files
+        id: changed-files
         run: |
           if [ "${{ github.event_name }}" == "pull_request" ]; then
-            echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
-            echo "BASE_SHA=${{ github.event.pull_request.base.sha }}" >> $GITHUB_OUTPUT
-            echo "HEAD_SHA=${{ github.sha }}" >> $GITHUB_OUTPUT
-            echo "IS_PR=true" >> $GITHUB_OUTPUT
+            git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} > changed_files.txt
           else
-            echo "BASE_SHA=$(git rev-parse HEAD~1)" >> $GITHUB_OUTPUT
-            echo "HEAD_SHA=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-            echo "IS_PR=false" >> $GITHUB_OUTPUT
-            echo "BRANCH=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+            git diff --name-only HEAD~1 HEAD > changed_files.txt
           fi
-          echo "REPO=${{ github.repository }}" >> $GITHUB_OUTPUT
+          echo "Files changed:"
+          cat changed_files.txt
       
-      - name: Review with Claude using GitHub MCP
+      - name: Get file diffs
+        id: get-diffs
+        run: |
+          echo "DIFFS<<EOF" >> $GITHUB_OUTPUT
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            git diff ${{ github.event.pull_request.base.sha }} ${{ github.sha }}
+          else
+            git diff HEAD~1 HEAD
+          fi >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      
+      - name: Review code with Claude
         id: claude-review
         run: |
-          cat > review_script.js << 'SCRIPT'
-          const REPO = process.env.REPO;
-          const PR_NUMBER = process.env.PR_NUMBER;
-          const BASE_SHA = process.env.BASE_SHA;
-          const HEAD_SHA = process.env.HEAD_SHA;
-          const IS_PR = process.env.IS_PR === 'true';
+          DIFF="${{ steps.get-diffs.outputs.DIFFS }}"
           
-          async function reviewCode() {
-            // Call Claude API with GitHub MCP tools
-            const response = await fetch('https://api.anthropic.com/v1/messages', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'x-api-key': process.env.ANTHROPIC_API_KEY,
-                'anthropic-version': '2023-06-01'
-              },
-              body: JSON.stringify({
-                model: 'claude-sonnet-4-20250514',
-                max_tokens: 8000,
-                tools: [
-                  {
-                    type: 'computer_use_20241022',
-                    name: 'mcp_github',
-                    mcp_servers: {
-                      github: {
-                        command: 'npx',
-                        args: ['-y', '@modelcontextprotocol/server-github'],
-                        env: {
-                          GITHUB_PERSONAL_ACCESS_TOKEN: process.env.GITHUB_TOKEN
-                        }
-                      }
-                    }
-                  }
-                ],
-                messages: [{
-                  role: 'user',
-                  content: IS_PR 
-                    ? `Review the pull request #${PR_NUMBER} in repository ${REPO}. 
-                       
-                       Use the GitHub MCP tools to:
-                       1. Get the PR details and files changed
-                       2. Analyze the code changes
-                       3. Check for issues, bugs, and improvements
-                       
-                       Provide a comprehensive review with:
-                       - Summary of changes
-                       - Specific issues found (with file and line numbers)
-                       - Security concerns
-                       - Performance suggestions
-                       - Best practice recommendations
-                       
-                       Format your response as markdown.`
-                    : `Review the latest commit in repository ${REPO} (comparing ${BASE_SHA} to ${HEAD_SHA}).
-                       
-                       Use the GitHub MCP tools to:
-                       1. Get the commit diff
-                       2. Analyze the changed files
-                       3. Identify potential issues
-                       
-                       Provide a detailed review with specific suggestions for improvements.
-                       Format your response as markdown.`
-                }]
-              })
-            });
-            
-            const data = await response.json();
-            
-            // Handle tool calls if Claude needs to use GitHub MCP
-            if (data.stop_reason === 'tool_use') {
-              console.log('Claude is using GitHub MCP tools...');
-              // In production, you'd handle the tool execution loop here
-            }
-            
-            // Extract review text
-            const review = data.content
-              .filter(item => item.type === 'text')
-              .map(item => item.text)
-              .join('\n\n');
-            
-            // Save review
-            const fs = require('fs');
-            fs.writeFileSync('review.md', review);
-            
-            // Output for GitHub Actions
-            console.log('REVIEW_START');
-            console.log(review);
-            console.log('REVIEW_END');
-          }
+          # Create the prompt for Claude
+          PROMPT="You are a senior code reviewer. Review the following code changes and provide:
+          1. A summary of the changes
+          2. Potential bugs or issues
+          3. Security concerns
+          4. Performance improvements
+          5. Best practice suggestions
+          6. Specific line-by-line suggestions in the format: 'File: filename.ext, Line: X - Suggestion: your suggestion'
           
-          reviewCode().catch(console.error);
-          SCRIPT
+          Here are the code changes:
+          \`\`\`diff
+          ${DIFF}
+          \`\`\`
           
-          # Run the review script
-          node review_script.js > review_output.txt 2>&1
+          Provide your review in markdown format."
           
-          # Extract review from output
-          sed -n '/REVIEW_START/,/REVIEW_END/p' review_output.txt | \
-            sed '1d;$d' > review.md
+          # Call Claude API
+          RESPONSE=$(curl -s https://api.anthropic.com/v1/messages \
+            -H "Content-Type: application/json" \
+            -H "x-api-key: ${{ secrets.ANTHROPIC_API_KEY }}" \
+            -H "anthropic-version: 2023-06-01" \
+            -d '{
+              "model": "claude-sonnet-4-20250514",
+              "max_tokens": 4096,
+              "messages": [{
+                "role": "user",
+                "content": "'"${PROMPT//\"/\\\"}"'"
+              }]
+            }')
           
-          # Save to output
+          # Extract the review text
+          REVIEW=$(echo "$RESPONSE" | jq -r '.content[0].text')
+          
+          # Save review to file
+          echo "$REVIEW" > review.md
+          echo "Review saved to review.md"
+          
+          # Save for next step
           echo "REVIEW<<EOF" >> $GITHUB_OUTPUT
-          cat review.md >> $GITHUB_OUTPUT
+          echo "$REVIEW" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ steps.context.outputs.REPO }}
-          PR_NUMBER: ${{ steps.context.outputs.PR_NUMBER }}
-          BASE_SHA: ${{ steps.context.outputs.BASE_SHA }}
-          HEAD_SHA: ${{ steps.context.outputs.HEAD_SHA }}
-          IS_PR: ${{ steps.context.outputs.IS_PR }}
       
       - name: Create or update PR with suggestions
-        if: github.event_name == 'push' && !contains(github.event.head_commit.message, '[skip-review]')
+        if: github.event_name == 'push'
         run: |
+          # Check if a PR already exists for this branch
           BRANCH_NAME="${{ github.ref_name }}"
           BASE_BRANCH="main"
           
-          # Check for existing PR
           PR_EXISTS=$(gh pr list --head "$BRANCH_NAME" --base "$BASE_BRANCH" --json number --jq '.[0].number')
           
-          REVIEW_BODY="## 🤖 Automated Code Review by Claude
+          if [ -z "$PR_EXISTS" ]; then
+            # Create new PR
+            gh pr create \
+              --title "🤖 Claude Review: Updates to $BRANCH_NAME" \
+              --body "## Automated Code Review by Claude
 
           ${{ steps.claude-review.outputs.REVIEW }}
 
           ---
-          *Generated using Claude AI with GitHub MCP Connector*
-          *To skip review, include \`[skip-review]\` in commit message*"
-          
-          if [ -z "$PR_EXISTS" ]; then
-            gh pr create \
-              --title "🤖 Claude Review: Updates to $BRANCH_NAME" \
-              --body "$REVIEW_BODY" \
+          *This PR was automatically created by Claude AI based on recent changes.*" \
               --base "$BASE_BRANCH" \
-              --head "$BRANCH_NAME" || echo "PR creation skipped or failed"
+              --head "$BRANCH_NAME"
           else
-            gh pr comment "$PR_EXISTS" --body "$REVIEW_BODY"
+            # Update existing PR
+            gh pr comment "$PR_EXISTS" --body "## Updated Code Review by Claude
+
+          ${{ steps.claude-review.outputs.REVIEW }}
+
+          ---
+          *Review updated: $(date)*"
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Comment on PR
+      - name: Comment on existing PR
         if: github.event_name == 'pull_request'
         run: |
           gh pr comment ${{ github.event.pull_request.number }} --body "## 🤖 Claude Code Review
@@ -199,20 +131,6 @@ jobs:
           ${{ steps.claude-review.outputs.REVIEW }}
 
           ---
-          *Powered by Claude AI with GitHub MCP*"
+          *Automated review by Claude AI*"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Create review suggestions as PR review
-        if: github.event_name == 'pull_request'
-        run: |
-          # Parse review.md for specific file/line suggestions and create review comments
-          # This is a placeholder - you can extend this to parse Claude's output
-          # and create inline PR review comments
-          
-          gh pr review ${{ github.event.pull_request.number }} \
-            --comment \
-            --body "✅ Automated review completed. See comments above for details."
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
