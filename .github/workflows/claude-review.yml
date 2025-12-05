@@ -102,7 +102,7 @@ jobs:
             --description "Automated code reviews by Claude AI" \
             --color "0E8A16" 2>/dev/null || echo "Label already exists"
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
 
       - name: Comment on PR
         if: github.event_name == 'pull_request' && steps.get-diff.outputs.HAS_CHANGES == 'true'
@@ -198,7 +198,7 @@ jobs:
             gh pr comment "$PR_NUMBER" --body-file comment_body.md
           fi
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
       
       - name: Report status
         if: always()
