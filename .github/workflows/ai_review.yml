@@ -1,0 +1,57 @@
+name: AI Code Review
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**.py'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  ai-review:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openai
+
+      - name: Run AI Reviewer
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/scripts/ai_reviewer.py
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "refactor: AI code review suggestions"
+          title: "🤖 AI Code Review Suggestions"
+          body: |
+            This PR contains automated code improvements suggested by Claude.
+            
+            **Changes:**
+            - Refactoring for readability
+            - Type hint additions
+            - Docstring improvements
+            - Bug fixes
+            
+            *Triggered by commit to main.*
+          branch: ai-review/patch-${{ github.run_id }}
+          base: main
+          delete-branch: true
