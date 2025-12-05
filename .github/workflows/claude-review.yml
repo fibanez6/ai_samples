@@ -24,14 +24,11 @@ jobs:
           fetch-depth: 0
       
       - name: Setup script permissions
-        run: chmod +x .github/scripts/*.sh
+        run: chmod +x .github/scripts/claude-review.sh
       
       - name: Get changed files and diff
         id: get-diff
         run: |
-          # Run the review script
-          ./.github/scripts/get-diff.sh
-
           if [ "${{ github.event_name }}" == "pull_request" ]; then
             echo "Getting PR diff..."
             git diff ${{ github.event.pull_request.base.sha }}..${{ github.sha }} > diff.txt
