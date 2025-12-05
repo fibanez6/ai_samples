@@ -156,13 +156,22 @@ jobs:
           
           if [ -z "$PR_NUMBER" ]; then
             echo "Creating new PR..."
-            gh pr create \
+            PR_OUTPUT=$(gh pr create \
               --title "🤖 Claude Review: Updates to $BRANCH_NAME" \
-              --body-file pr_body.md \
+              --body "$PR_BODY" \
               --base "$BASE_BRANCH" \
               --head "$BRANCH_NAME" \
-              --label "automated-review" \
-              2>/dev/null || echo "⚠️ Could not create PR (may already exist or branch is up to date)"
+              --label "automated-review" 2>&1) || PR_FAILED=true
+            
+            if [ "$PR_FAILED" == "true" ]; then
+              echo "⚠️ PR creation failed with output:"
+              echo "$PR_OUTPUT"
+              
+              # Check if branches are identical
+              if git diff --quiet origin/$BASE_BRANCH...$BRANCH_NAME; then
+                echo "ℹ️ No differences between $BASE_BRANCH and $BRANCH_NAME - PR not needed"
+              fi
+            fi
           else
             echo "PR #$PR_NUMBER already exists. Adding comment..."
             
