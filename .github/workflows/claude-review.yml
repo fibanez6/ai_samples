@@ -24,11 +24,14 @@ jobs:
           fetch-depth: 0
       
       - name: Setup script permissions
-        run: chmod +x .github/scripts/claude-review.sh
+        run: chmod +x .github/scripts/*.sh
       
       - name: Get changed files and diff
         id: get-diff
         run: |
+          # Run the review script
+          ./.github/scripts/get-diff.sh
+
           if [ "${{ github.event_name }}" == "pull_request" ]; then
             echo "Getting PR diff..."
             git diff ${{ github.event.pull_request.base.sha }}..${{ github.sha }} > diff.txt
@@ -138,38 +141,46 @@ jobs:
             --json number \
             --jq '.[0].number' 2>/dev/null || echo "")
           
-          # Prepare PR body
-          PR_BODY="## 🤖 Automated Code Review by Claude
+          # Save review to temp file to avoid shell escaping issues
+          cat > pr_body.md << 'EOFBODY'
+          ## 🤖 Automated Code Review by Claude
 
           ${{ steps.claude-review.outputs.REVIEW }}
 
           ---
           ### 📊 Review Information
-          - **Branch**: \`$BRANCH_NAME\`
-          - **Commit**: \`${{ github.sha }}\`
+          - **Branch**: `${{ github.ref_name }}`
+          - **Commit**: `${{ github.sha }}`
           - **Triggered by**: Push event
           - **Model**: Claude Sonnet 4
 
-          *This PR was automatically created based on code changes. Review the suggestions above and merge when ready.*"
+          *This PR was automatically created based on code changes. Review the suggestions above and merge when ready.*
+          EOFBODY
           
           if [ -z "$PR_NUMBER" ]; then
             echo "Creating new PR..."
             gh pr create \
               --title "🤖 Claude Review: Updates to $BRANCH_NAME" \
-              --body "$PR_BODY" \
+              --body-file pr_body.md \
               --base "$BASE_BRANCH" \
               --head "$BRANCH_NAME" \
               --label "automated-review" \
               2>/dev/null || echo "⚠️ Could not create PR (may already exist or branch is up to date)"
           else
             echo "PR #$PR_NUMBER already exists. Adding comment..."
-            gh pr comment "$PR_NUMBER" --body "## 🔄 Updated Code Review
+            
+            # Create comment body
+            cat > comment_body.md << 'EOFCOMMENT'
+          ## 🔄 Updated Code Review
 
           ${{ steps.claude-review.outputs.REVIEW }}
 
           ---
           *Review updated: $(date -u '+%Y-%m-%d %H:%M:%S UTC')*
-          *Commit*: \`${{ github.sha }}\`"
+          *Commit*: `${{ github.sha }}`
+          EOFCOMMENT
+            
+            gh pr comment "$PR_NUMBER" --body-file comment_body.md
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
