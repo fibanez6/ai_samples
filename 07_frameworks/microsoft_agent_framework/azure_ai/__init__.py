@@ -1,1 +1,1 @@
-# Package initializer for the Microsoft Agent Framework Azure AI module.
+# Package initializer for the Microsoft Agent Framework Azure AI Chat module.
