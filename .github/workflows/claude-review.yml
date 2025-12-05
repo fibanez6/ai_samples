@@ -108,7 +108,7 @@ jobs:
         if: github.event_name == 'pull_request' && steps.get-diff.outputs.HAS_CHANGES == 'true'
         uses: actions/github-script@v8
         with:
-          github-token: ${{ secrets.PAT_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const review = process.env.REVIEW_CONTENT;
             
@@ -128,12 +128,37 @@ jobs:
             
             *Automated review • [View full diff](${{ github.event.pull_request.html_url }}/files)*`;
             
-            await github.rest.issues.createComment({
+            // Check for existing bot comments
+            const comments = await github.rest.issues.listComments({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: body
             });
+            
+            const botComment = comments.data.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('🤖 Claude AI Code Review')
+            );
+            
+            if (botComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: body
+              });
+              console.log('Updated existing comment');
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+              console.log('Created new comment');
+            }
         env:
           REVIEW_CONTENT: ${{ steps.claude-review.outputs.REVIEW }}
       
