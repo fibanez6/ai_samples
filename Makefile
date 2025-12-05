@@ -37,25 +37,26 @@ select: ## Select and run an example
 	@echo "506) mcp inspector - stdio"
 	@echo "507) mcp inspector - http"
 	@echo "508) mcp inspector - sse"
-	@echo "700) microsoft agent framework - azure ai - basic chat message"	
-	@echo "701) microsoft agent framework - azure ai - basic chat message stream"
-	@echo "702) microsoft agent framework - azure ai - basic chat agent"	
-	@echo "703) microsoft agent framework - azure ai - basic chat agent stream"
-	@echo "704) microsoft agent framework - azure ai - structured output"
-	@echo "705) microsoft agent framework - azure ai - function tools"
-	@echo "706) microsoft agent framework - azure ai - function tools human approval"
-	@echo "707) microsoft agent framework - azure ai - mcp"
-	@echo "708) microsoft agent framework - azure ai - mcp inspector"
-	@echo "709) microsoft agent framework - azure ai - middleware"
-	@echo "710) microsoft agent framework - azure ai - middleware security"
-	@echo "711) microsoft agent framework - azure ai - images"
-	@echo "712) microsoft agent framework - azure ai - openAPI"
-	@echo "713) microsoft agent framework - azure ai - multi-turn conversation"
-	@echo "714) microsoft agent framework - azure ai - persistent conversation"
-	@echo "715) microsoft agent framework - azure ai - workflow sequencial"
-	@echo "716) microsoft agent framework - azure ai - workflow concurrent"
-	@echo "717) microsoft agent framework - azure ai - observability"
-	@echo "718) microsoft agent framework - azure ai - evaluation"
+	@echo "700) microsoft agent framework - azure ai - chat - basic message"	
+	@echo "701) microsoft agent framework - azure ai - chat - basic message stream"
+# 	@echo "702) microsoft agent framework - azure ai - chat - structured output"
+# 	@echo "703) microsoft agent framework - azure ai - chat - function tools"
+# 	@echo "704) microsoft agent framework - azure ai - chat - function tools human approval"
+# 	@echo "705) microsoft agent framework - azure ai - chat - mcp"
+# 	@echo "706) microsoft agent framework - azure ai - chat - mcp inspector"
+# 	@echo "707) microsoft agent framework - azure ai - chat - middleware"
+# 	@echo "708) microsoft agent framework - azure ai - chat - middleware security"
+	@echo "709) microsoft agent framework - azure ai - chat - images_uri"
+	@echo "710) microsoft agent framework - azure ai - chat - images_uri_local"
+# 	@echo "711) microsoft agent framework - azure ai - chat - openAPI"
+# 	@echo "712) microsoft agent framework - azure ai - chat - multi-turn conversation"
+# 	@echo "713) microsoft agent framework - azure ai - chat - persistent conversation"
+# 	@echo "714) microsoft agent framework - azure ai - chat - workflow sequencial"
+# 	@echo "715) microsoft agent framework - azure ai - chat - workflow concurrent"
+# 	@echo "716) microsoft agent framework - azure ai - chat - observability"
+# 	@echo "716) microsoft agent framework - azure ai - chat - evaluation"
+	@echo "750) microsoft agent framework - azure ai - agent - basic chat agent"	
+	@echo "751) microsoft agent framework - azure ai - agent - basic chat agent stream"
 
 	@read -p "Choose an option: " choice; \
 	case $$choice in \
@@ -86,23 +87,24 @@ select: ## Select and run an example
 		508) npx @modelcontextprotocol/inspector http://localhost:8000/sse ;; \
 		700) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_basic_chat_message" ;; \
 		701) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_basic_chat_message_stream" ;; \
-		702) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_basic_chat_agent" ;; \
-		703) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_basic_chat_agent_stream" ;; \
-		704) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_structured_output" ;; \
-		705) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_function_tools" ;; \
-		706) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_function_tools_human_approval" ;; \
-		707) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_mcp" ;; \
-		708) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_mcp_inspector" ;; \
-		709) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_middleware" ;; \
-		710) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_middleware_security" ;; \
-		711) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_images" ;; \
-		712) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_openapi" ;; \
-		713) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_multi_turn_conversation" ;; \
-		714) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_persistent_conversation" ;; \
-		715) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_workflow_sequential" ;; \
-		716) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_workflow_concurrent" ;; \
-		717) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_observability" ;; \
-		718) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_evaluation" ;; \
+		702) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_structured_output" ;; \
+		703) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_function_tools" ;; \
+		704) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_function_tools_human_approval" ;; \
+		705) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_mcp" ;; \
+		706) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_mcp_inspector" ;; \
+		707) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_middleware" ;; \
+		708) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_middleware_security" ;; \
+		709) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_images_uri" ;; \
+		710) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_images_local" ;; \
+		711) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_openapi" ;; \
+		712) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_multi_turn_conversation" ;; \
+		713) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_persistent_conversation" ;; \
+		714) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_workflow_sequential" ;; \
+		715) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_workflow_concurrent" ;; \
+		716) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_observability" ;; \
+		717) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_evaluation" ;; \
+		750) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.chat.agent_framework_basic_chat_agent" ;; \
+		751) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.chat.agent_framework_basic_chat_agent_stream" ;; \
 	esac
 
 install: ## Install dependencies with UV

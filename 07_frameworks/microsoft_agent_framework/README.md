@@ -18,6 +18,10 @@ The Microsoft Agent Framework is a modular toolkit designed to simplify the deve
 
 ## Doco
 
+- [ChatAgent vs ChatMessage](docs/Microsoft_Agent_Framework_ChatAgent_vs_ChatMessage.md)
+
+## Resourcq
+
 - [Develop an AI agent with Microsoft Agent Framework](https://learn.microsoft.com/en-gb/training/modules/develop-ai-agent-with-semantic-kernel/?wt.mc_id=1reg_26463_webpage_reactor)
 - [Microsoft Agent Framework](https://learn.microsoft.com/en-gb/agent-framework/overview/agent-framework-overview?wt.mc_id=1reg_26463_webpage_reactor)
 - [Model Context Protocol](https://learn.microsoft.com/en-gb/agent-framework/user-guide/model-context-protocol/?pivots=programming-language-csharp&wt.mc_id=1reg_26465_webpage_reactor)
