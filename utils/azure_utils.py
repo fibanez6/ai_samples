@@ -1,7 +1,8 @@
 import json
 
 import rich
-from agent_framework._types import AgentRunResponse
+from agent_framework import Role
+from agent_framework._types import AgentRunResponse, ChatMessage
 from rich.console import Group
 from rich.json import JSON
 from rich.markdown import Markdown
@@ -19,6 +20,16 @@ def display_panel(title: str, content, border_style: str):
         )
     )
 
+def print_agent_messages(message: ChatMessage | str, title: str = "Agent Messages"):
+    """Display agent messages in a formatted panel."""
+    processed_messages = {}
+
+    if isinstance(message, ChatMessage):
+        processed_messages[message.role.value] = message.text
+    else:
+        processed_messages[Role.USER.value] = message
+
+    display_panel(title, JSON.from_data(processed_messages), "bold blue")
 
 def print_agent_response(response: AgentRunResponse, title: str = "Agent Framework AI Response"):
     """Display Azure AI response in a formatted panel."""

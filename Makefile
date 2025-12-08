@@ -40,7 +40,7 @@ select: ## Select and run an example
 	@echo "700) microsoft agent framework - azure ai - chat - basic message"	
 	@echo "701) microsoft agent framework - azure ai - chat - basic message stream"
 # 	@echo "702) microsoft agent framework - azure ai - chat - structured output"
-# 	@echo "703) microsoft agent framework - azure ai - chat - function tools"
+	@echo "703) microsoft agent framework - azure ai - chat - function tools"
 # 	@echo "704) microsoft agent framework - azure ai - chat - function tools human approval"
 # 	@echo "705) microsoft agent framework - azure ai - chat - mcp"
 # 	@echo "706) microsoft agent framework - azure ai - chat - mcp inspector"
