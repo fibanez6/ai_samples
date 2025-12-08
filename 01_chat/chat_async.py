@@ -5,6 +5,7 @@ Chat Parallel: Async assistant chat generating multiple sport descriptions concu
 import asyncio
 
 from agents.openAIClient import AsyncOpenAIClient
+from utils.agent_utils import await_for_response
 from utils.print_utils import print_agent_messages, print_agent_response
 
 agent = AsyncOpenAIClient()  # <----- Use async agent client
@@ -26,11 +27,13 @@ async def generate_response(sport: str):
 
     print_agent_messages(messages, title=panel_title)
 
-    agent_response = await agent.chat_completion_create(
-        model=agent.model,
-        temperature=0.7,
-        messages=messages,
-        spinner_text=f"Waiting for the response for {sport}...",
+    agent_response = await await_for_response(
+        agent.client.chat.completions.create(
+            model=agent.model,
+            temperature=0.7,
+            messages=messages,
+        ),
+        spinner_text=f"Waiting for the response for {sport}..."
     )
 
     panel_title = f"Agent Response for sport: {sport}"

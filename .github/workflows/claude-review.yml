@@ -28,7 +28,6 @@ jobs:
       
       - name: Get changed files and diff
         id: get-diff
-        if: !(github.event_name == 'pull_request' && github.event.action == 'opened')
         run: |
           if [ "${{ github.event_name }}" == "pull_request" ]; then
             echo "Getting PR diff..."

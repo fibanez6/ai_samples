@@ -3,9 +3,10 @@
 import json
 from concurrent.futures import ThreadPoolExecutor
 
-from rich import print
+import rich
 
 from agents.openAIClient import OpenAIClient
+from utils.agent_utils import wait_for_response
 from utils.print_utils import print_agent_messages, print_agent_response
 
 # --- Define the tool (function) ---
@@ -83,16 +84,18 @@ available_functions = {
 
 
 def main():
+    """ Run the agent with tools. """
+
     print_agent_messages(messages, title=panel_title)
 
-    agent_response = agent.chat_completion_create(
+    agent_response = wait_for_response(agent.client.chat.completions.create(
         model=agent.model,
         temperature=0.7,
         messages=messages,
         tools=tools,
         tool_choice="auto",
         # parallel_tool_calls=False, <----- Disable sequential tool calls
-    )
+    ))
 
     print_agent_response(agent_response)
 
@@ -113,7 +116,7 @@ def main():
                 function_name = call.function.name
                 args = json.loads(call.function.arguments)
 
-                print(f"Tool request: {function_name}({args})")
+                rich.print(f"Tool request: {function_name}({args})")
 
                 # Submit the function to be executed in parallel
                 if function_name in available_functions:
@@ -123,7 +126,7 @@ def main():
                     # Store the future along with tool call and function name
                     futures.append((call, function_name, future))
                 else:
-                    print(f"[red]Function '{function_name}' not found.[/red]")
+                    rich.print(f"[red]Function '{function_name}' not found.[/red]")
 
             # Add each tool result to the conversation
             for tool_call, function_name, future in futures:
@@ -136,21 +139,21 @@ def main():
                     }
                 )
 
-        print("\n[bold green]Tool results added to the conversation.[/bold green]\n")
+        rich.print("\n[bold green]Tool results added to the conversation.[/bold green]\n")
 
         # Get final response from the model with all tool results
-        final_response = agent.chat_completion_create(
+        final_response = wait_for_response(agent.client.chat.completions.create(
             model=agent.model,
             temperature=0.7,
             messages=messages,
             tools=tools,
             tool_choice="auto",
-        )
+        ))
 
         # Display the final response
         print_agent_response(final_response)
     else:
-        print(agent_response.choices[0].message.content)
+        rich.print(agent_response.choices[0].message.content)
 
 
 if __name__ == "__main__":

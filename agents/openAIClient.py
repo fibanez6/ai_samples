@@ -3,8 +3,6 @@ from abc import ABC
 
 from dotenv import load_dotenv
 from openai import AsyncOpenAI, OpenAI
-from rich.live import Live
-from rich.spinner import Spinner
 
 load_dotenv(override=True)
 
@@ -55,20 +53,6 @@ class OpenAIClient(ABC):
         # return AsyncClient(host=os.getenv("OLLAMA_HOST", "http://localhost:11434"))
         return OpenAI(base_url=os.environ["OLLAMA_HOST"], api_key="nokeyneeded")
     
-    def chat_completion_create(self, **kwargs):
-        spinner_text = kwargs.pop("spinner_text", "Waiting for the response...")
-        spinner = Spinner("dots", text=spinner_text)
-        with Live(spinner, refresh_per_second=10):
-            response = self.client.chat.completions.create(**kwargs)
-        return response
-    
-    def chat_completion_parse(self, **kwargs):
-        spinner_text = kwargs.pop("spinner_text", "Waiting for the response...")
-        spinner = Spinner("dots", text=spinner_text)
-        with Live(spinner, refresh_per_second=10):
-            response = self.client.chat.completions.parse(**kwargs)
-        return response
-
     def __del__(self):
         if self.client is not None:
             try:
@@ -123,13 +107,6 @@ class AsyncOpenAIClient(ABC):
         # from ollama import AsyncClient
         # return AsyncClient(host=os.getenv("OLLAMA_HOST", "http://localhost:11434"))
         return AsyncOpenAI(base_url=os.environ["OLLAMA_HOST"], api_key="nokeyneeded")
-    
-    async def chat_completion_create(self, **kwargs):
-        spinner_text = kwargs.pop("spinner_text", "Waiting for the response...")
-        spinner = Spinner("dots", text=spinner_text)
-        with Live(spinner, refresh_per_second=10):
-            response = await self.client.chat.completions.create(**kwargs)
-        return response
     
     def __del__(self):
         if self.client is not None:

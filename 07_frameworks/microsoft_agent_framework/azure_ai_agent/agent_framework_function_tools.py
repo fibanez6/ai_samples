@@ -12,7 +12,7 @@ from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 from pydantic import Field
 
-from utils.agent_utils import wait_for_response
+from utils.agent_utils import await_for_response
 from utils.azure_utils import print_agent_response
 
 
@@ -51,13 +51,13 @@ async def tools_on_agent_level() -> None:
 
     # First query - agent uses weather tool
     query1 = "What's the weather like in New York?"
-    result = await wait_for_response(agent.run(query1))
+    result = await await_for_response(agent.run(query1))
 
     print_agent_response(result)
 
     # Second query - agent uses time tool
     # query2 = "What's the time?"
-    # result = await wait_for_response(agent.run(query2))
+    # result = await await_for_response(agent.run(query2))
     # print_agent_response(result)
 
 

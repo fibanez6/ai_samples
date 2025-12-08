@@ -5,6 +5,7 @@ n
 import openai
 
 from agents.openAIClient import OpenAIClient
+from utils.agent_utils import wait_for_response
 from utils.print_utils import print_agent_messages, print_agent_response
 
 agent = OpenAIClient()
@@ -26,11 +27,11 @@ def main():
     print_agent_messages(messages, title=panel_title)
 
     try:
-        agent_response = agent.chat_completion_create(
+        agent_response = wait_for_response(agent.client.chat.completions.create(
             model=agent.model,
             temperature=0.7,
             messages=messages,
-        )
+        ))
 
         print_agent_response(agent_response)
     except openai.APIError as error:
