@@ -1,4 +1,6 @@
-""" """
+"""
+This example demonstrates how to use the Azure AI Agent Framework to analyze a local image file.
+"""
 
 import asyncio
 import os

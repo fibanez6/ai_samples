@@ -9,7 +9,7 @@ from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
 
 from utils.agent_utils import wait_for_response
-from utils.print_utils import print_agent_response
+from utils.azure_utils import print_agent_response
 
 
 async def main() -> None:

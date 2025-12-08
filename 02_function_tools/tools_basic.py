@@ -2,11 +2,13 @@
 Basic example of using an agent with tools.
 """
 
+import asyncio
 import json
 
 from rich import print
 
 from agents.openAIClient import OpenAIClient
+from utils.agent_utils import wait_for_response
 from utils.print_utils import print_agent_messages, print_agent_response
 
 # --- Define the tool (function) ---
@@ -50,10 +52,11 @@ panel_title = (
 )
 
 
-def main():
+async def main():
 
     print_agent_messages(messages, title=panel_title)
 
+    # Chat Completion
     agent_response = agent.chat_completion_create(
         model=agent.model,
         temperature=0.7,
@@ -79,4 +82,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

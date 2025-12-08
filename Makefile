@@ -57,6 +57,8 @@ select: ## Select and run an example
 # 	@echo "716) microsoft agent framework - azure ai - chat - evaluation"
 	@echo "750) microsoft agent framework - azure ai - agent - basic chat agent"	
 	@echo "751) microsoft agent framework - azure ai - agent - basic chat agent stream"
+# 	@echo "752) microsoft agent framework - azure ai - agent - structured output"
+	@echo "753) microsoft agent framework - azure ai - agent - function tools"
 
 	@read -p "Choose an option: " choice; \
 	case $$choice in \
@@ -103,8 +105,10 @@ select: ## Select and run an example
 		715) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_workflow_concurrent" ;; \
 		716) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_observability" ;; \
 		717) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.agent_framework_evaluation" ;; \
-		750) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.chat.agent_framework_basic_chat_agent" ;; \
-		751) make execute example="07_frameworks.microsoft_agent_framework.azure_ai.chat.agent_framework_basic_chat_agent_stream" ;; \
+		750) make execute example="07_frameworks.microsoft_agent_framework.azure_ai_agent.agent_framework_basic_chat_agent" ;; \
+		751) make execute example="07_frameworks.microsoft_agent_framework.azure_ai_agent.agent_framework_basic_chat_agent_stream" ;; \
+		752) make execute example="07_frameworks.microsoft_agent_framework.azure_ai_agent.agent_framework_structured_output" ;; \
+		753) make execute example="07_frameworks.microsoft_agent_framework.azure_ai_agent.agent_framework_function_tools" ;; \
 	esac
 
 install: ## Install dependencies with UV

@@ -1,7 +1,7 @@
 """
 Basic Agent example of using the Microsoft Agent Framework Azure AI module.
 
-A `ChatAgent` is a core component within the agent framework, designed to manage and drive conversational interactions. 
+A `ChatAgent` is a core component within the agent framework, designed to manage and drive conversational interactions.
 It acts as the "brain" of the agent, encapsulating behavior rather than just text.
 
 Key responsibilities include:
@@ -15,11 +15,13 @@ Key responsibilities include:
 import asyncio
 
 from agent_framework import ChatAgent
+from agent_framework._types import AgentRunResponse
 from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
+
 from utils.agent_utils import wait_for_response
-from utils.print_utils import print_agent_response
-from agent_framework._types import AgentRunResponse
+from utils.azure_utils import print_agent_response
+
 
 async def main() -> None:
     """Example of streaming response (get the complete result at once)."""
@@ -35,10 +37,12 @@ async def main() -> None:
     ):
 
         # Run the agent and wait for the response
-        result: AgentRunResponse = await wait_for_response(agent.run("Tell me a joke about a pirate."))
+        result: AgentRunResponse = await wait_for_response(
+            agent.run("Tell me a joke about a pirate.")
+        )
 
         # Print the response
-        print_agent_response(result)   
+        print_agent_response(result)
 
 
 if __name__ == "__main__":

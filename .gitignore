@@ -210,3 +210,5 @@ __marimo__/
 # Keep the example template (.gemini/mcp_config.example.json) but ignore actual config
 .gemini/mcp_config.json
 
+test.py
+claude-review.yml.bck
