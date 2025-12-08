@@ -5,9 +5,10 @@ Compatible with standard ChatCompletionChunk API.
 
 import json
 
-from rich import print
+import rich
 
 from agents.openAIClient import OpenAIClient
+from utils.agent_utils import wait_for_response
 from utils.print_utils import print_agent_messages, print_agent_response
 
 # --- Define the tool (function) ---
@@ -55,16 +56,16 @@ def stream_with_tools(messages):
 
     print_agent_messages(messages, title=panel_title)
 
-    stream = agent.chat_completion_create(
+    stream = wait_for_response(agent.client.chat.completions.create(
         model=agent.model,
         temperature=0.7,
         messages=messages,
         tools=tools,
         tool_choice="auto",
         stream=True,
-    )
+    ))
 
-    print("[yellow]\n--- Streaming initial assistant reply ---[/yellow]\n")
+    rich.print("[yellow]\n--- Streaming initial assistant reply ---[/yellow]\n")
 
     # --- Only 1 tool call normally; but we support multiple ---
     current_call_id = None
@@ -101,8 +102,8 @@ def stream_with_tools(messages):
             break
 
     # Build object exactly like your ToolCall type wrapper
-    print("\n\n--- Tool call captured ---\n")
-    print(
+    rich.print("\n\n--- Tool call captured ---\n")
+    rich.print(
         f"[green]Tool call message: id={current_call_id}, name={current_call_name}, arguments={args_buffer}[/green]"
     )
 
@@ -123,7 +124,7 @@ def main():
 
     tool_call = response["tool_call"]
     if not tool_call["name"]:
-        print("[red]No tool calls detected.[/red]")
+        rich.print("[red]No tool calls detected.[/red]")
         return
 
     # Step 2 - Append ASSISTANT TOOL CALL MESSAGE (no intermediate assistant content!)
@@ -158,16 +159,16 @@ def main():
     )
 
     # Step 4 — Final assistant reply
-    print("\n--- Final assistant reply ---\n")
+    rich.print("\n--- Final assistant reply ---\n")
 
     print_agent_messages(messages, title=panel_title)
 
-    followup = agent.chat_completion_create(
+    followup = wait_for_response(agent.client.chat.completions.create(
         model=agent.model,
         temperature=0.7,
         messages=messages,
         tools=tools,
-    )
+    ))
 
     print_agent_response(followup)
 

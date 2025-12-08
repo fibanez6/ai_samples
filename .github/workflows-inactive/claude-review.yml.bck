@@ -35,15 +35,6 @@ jobs:
             
             # Get list of changed files
             git diff --name-only ${{ github.event.pull_request.base.sha }}..${{ github.sha }} > changed_files.txt
-            
-            # For newly opened PRs, always process the diff (don't check if empty)
-            if [ "${{ github.event.action }}" == "opened" ]; then
-              echo "First PR review - processing all changes"
-              echo "HAS_CHANGES=true" >> $GITHUB_OUTPUT
-              DIFF_SIZE=$(wc -l < diff.txt)
-              echo "Diff size: $DIFF_SIZE lines"
-              exit 0
-            fi
           else
             echo "Getting push diff..."
             # For push events, compare with previous commit
@@ -61,7 +52,7 @@ jobs:
           echo "Changed files:"
           cat changed_files.txt
           
-          # Check if diff is empty (for synchronize/reopened PRs and push events)
+          # Check if diff is empty
           if [ ! -s diff.txt ]; then
             echo "No changes detected"
             echo "HAS_CHANGES=false" >> $GITHUB_OUTPUT

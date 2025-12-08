@@ -6,6 +6,7 @@ from chromadb.utils import embedding_functions
 from dotenv import load_dotenv
 
 from agents.openAIClient import OpenAIClient
+from utils.agent_utils import wait_for_response
 from utils.print_utils import print_agent_messages, print_agent_response
 
 load_dotenv(override=True)
@@ -99,13 +100,13 @@ def rag_answer(query):
     rich.print(messages)
 
     # 3. Generate response
-    agent_response = agent.chat_completion_parse(
+    agent_response = wait_for_response(agent.client.chat.completions.parse(
         model=agent.model,
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
         ],
-    )
+    ))
 
     print_agent_response(agent_response)
 

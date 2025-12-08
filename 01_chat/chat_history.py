@@ -3,6 +3,7 @@ Chat History: Interactive math assistant chat with message history and rich UI.
 """
 
 from agents.openAIClient import OpenAIClient
+from utils.agent_utils import wait_for_response
 from utils.print_utils import print_agent_messages, print_agent_response
 
 agent = OpenAIClient()
@@ -19,6 +20,7 @@ panel_title = (
 
 
 def main():
+    """ Run the agent with chat history. """
 
     while True:
         question = input("\nYour math question: ")
@@ -26,11 +28,11 @@ def main():
 
         print_agent_messages(messages, title=panel_title)
 
-        agent_response = agent.chat_completion_create(
+        agent_response = wait_for_response(agent.client.chat.completions.create(
             model=agent.model,
             temperature=0.5,
             messages=messages,
-        )
+        ))
 
         print_agent_response(agent_response)
         messages.append(

@@ -1,14 +1,12 @@
 """
 Tools Basic Extended: Assistant chat using a tool (function) to lookup weather information with emoji responses.
 """
-
 import json
 
-from rich import print
-from rich.live import Live
-from rich.spinner import Spinner
+import rich
 
 from agents.openAIClient import OpenAIClient
+from utils.agent_utils import wait_for_response
 from utils.print_utils import print_agent_messages, print_agent_response
 
 # --- Define the tool (function) ---
@@ -32,6 +30,16 @@ tools = [
 
 
 def lookup_weather(location: str, unit: str = "celsius"):
+    """
+    Get the current weather for a location.
+    
+    Args:
+        location: The location to get weather for
+        unit: Temperature unit, either 'celsius' or 'fahrenheit' (default: 'celsius')
+    
+    Returns:
+        dict: Weather information containing location, temperature, unit, and description
+    """
     # Dummy implementation
     return {
         "location": location,
@@ -49,18 +57,19 @@ messages = [
 
 panel_title = f"Tools Basic Extended - (Agent: {agent.name.upper()} - Model: {agent.model.upper()})"
 
-
 def main():
+    """ Run the agent with tools. """
+
     print_agent_messages(messages, title=panel_title)
 
-    agent_response = agent.chat_completion_create(
+    agent_response = wait_for_response(agent.client.chat.completions.create(
         model=agent.model,
         temperature=0.7,
         messages=messages,
         tools=tools,
         tool_choice="auto",
         parallel_tool_calls=False,
-    )
+    ))
 
     print_agent_response(agent_response)
 
@@ -87,17 +96,17 @@ def main():
             )
 
             # Get a final response from the agent after tool execution
-            final_response = agent.chat_completion_create(
+            final_response = wait_for_response(agent.client.chat.completions.create(
                 model=agent.model,
                 temperature=0.7,
                 messages=messages,
                 tools=tools,
                 tool_choice="auto",
                 parallel_tool_calls=False,
-            )
+            ))
             print_agent_response(final_response)
     else:
-        print(agent_response.choices[0].message.content)
+        rich.print(agent_response.choices[0].message.content)
 
 
 if __name__ == "__main__":

@@ -1,12 +1,12 @@
 """
 Basic example of using an agent with tools.
 """
-
 import json
 
-from rich import print
+import rich
 
 from agents.openAIClient import OpenAIClient
+from utils.agent_utils import wait_for_response
 from utils.print_utils import print_agent_messages, print_agent_response
 
 # --- Define the tool (function) ---
@@ -30,6 +30,16 @@ tools = [
 
 
 def lookup_weather(location: str, unit: str = "celsius"):
+    """
+    Get the current weather for a location.
+    
+    Args:
+        location: The location to get weather for
+        unit: Temperature unit, either 'celsius' or 'fahrenheit' (default: 'celsius')
+    
+    Returns:
+        dict: Weather information containing location, temperature, unit, and description
+    """
     # Dummy implementation
     return {
         "location": location,
@@ -51,17 +61,19 @@ panel_title = (
 
 
 def main():
+    """ Run the agent with tools. """
 
     print_agent_messages(messages, title=panel_title)
 
-    agent_response = agent.chat_completion_create(
+    # Chat Completion
+    agent_response = wait_for_response(agent.client.chat.completions.create(
         model=agent.model,
         temperature=0.7,
         messages=messages,
         tools=tools,
         tool_choice="auto",
         parallel_tool_calls=False,
-    )
+    ))
 
     print_agent_response(agent_response)
 
@@ -73,9 +85,9 @@ def main():
         if tool_call.function.name == "lookup_weather":
             args = json.loads(tool_call.function.arguments)
             weather_info = lookup_weather(**args)
-            print(f"[bold green]Weather Info:[/bold green] {weather_info}")
+            rich.print(f"[bold green]Weather Info:[/bold green] {weather_info}")
     else:
-        print(agent_response.choices[0].message.content)
+        rich.print(agent_response.choices[0].message.content)
 
 
 if __name__ == "__main__":

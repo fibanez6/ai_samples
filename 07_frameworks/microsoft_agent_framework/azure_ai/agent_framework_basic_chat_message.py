@@ -16,8 +16,10 @@ import asyncio
 from agent_framework import ChatMessage, Role, TextContent
 from agent_framework.azure import AzureAIAgentClient
 from azure.identity.aio import AzureCliCredential
-from utils.agent_utils import wait_for_response
-from utils.print_utils import print_agent_response 
+
+from utils.agent_utils import await_for_response
+from utils.azure_utils import print_agent_response
+
 
 async def main() -> None:
     """Example of non-streaming response (get the complete result at once)."""
@@ -37,7 +39,7 @@ async def main() -> None:
         )
 
         # Run the agent and wait for the response
-        result = await wait_for_response(agent.run(message))
+        result = await await_for_response(agent.run(message))
 
         # Print the response
         print_agent_response(result)

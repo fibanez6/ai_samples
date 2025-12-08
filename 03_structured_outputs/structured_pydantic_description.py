@@ -6,6 +6,7 @@ import rich
 from pydantic import BaseModel, Field
 
 from agents.openAIClient import OpenAIClient
+from utils.agent_utils import wait_for_response
 from utils.print_utils import print_agent_messages, print_agent_response
 
 agent = OpenAIClient()
@@ -40,12 +41,12 @@ def main():
 
     print_agent_messages(messages, title=panel_title)
 
-    agent_response = agent.chat_completion_parse(
+    agent_response = wait_for_response(agent.client.chat.completions.parse(
         model=agent.model,
         temperature=0.7,
         messages=messages,
         response_format=PersonInfo,  # <----- Use the Pydantic model here
-    )
+    ))
 
     print_agent_response(agent_response)
 
