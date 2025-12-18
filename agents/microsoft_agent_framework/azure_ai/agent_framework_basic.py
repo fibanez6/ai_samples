@@ -10,7 +10,6 @@ Key attributes of a `ChatMessage` include:
 
 It can be thought of as: 'An object that stores what someone said.'
 """
-
 import asyncio
 
 from agent_framework.azure import AzureAIClient
