@@ -32,7 +32,7 @@
 uv run python -m 06_mcp.mcp_basic_stdio
 ```
 
-![MCP Basic STDIO Server Run](../docs/images/06_mcp/mcp_basic_stdio_server_run.png)
+![MCP Basic STDIO Server Run](../../../docs/images/05_mcp/mcp_basic_stdio_server_run.png)
 
 ### 2. Run the inspector
 
@@ -40,7 +40,7 @@ uv run python -m 06_mcp.mcp_basic_stdio
 npx @modelcontextprotocol/inspector .venv/bin/python 06_mcp/mcp_basic_stdio.py
 ```
 
-![MCP Basic STDIO Inspector Run](../docs/images/06_mcp/mcp_basic_stdio_inspector_run.png)
+![MCP Basic STDIO Inspector Run](../../../../../docs/images/05_mcp/mcp_basic_stdio_inspector_run.png)
 
 ### 3. Open the inspector in your browser
 
@@ -53,11 +53,11 @@ npx @modelcontextprotocol/inspector .venv/bin/python 06_mcp/mcp_basic_stdio.py
   * Proxy Session Token is set to the token from the inspector run
 * Click on "Connect"
 
-![MCP Basic STDIO Inspector Browser](../docs/images/06_mcp/mcp_basic_stdio_inspector_browser.png)
+![MCP Basic STDIO Inspector Browser](../../../docs/images/05_mcp/mcp_basic_stdio_inspector_browser.png)
 
 ### 4. Use the inspector to interact with the MCP server
 
-![MCP Basic STDIO Inspector Browser](../docs/images/06_mcp/mcp_basic_stdio_inspector_browser_sample.png)
+![MCP Basic STDIO Inspector Browser](../../../docs/images/05_mcp/mcp_basic_stdio_inspector_browser_sample.png)
 
 ## Run Inpection in HTTP mode
 
@@ -67,7 +67,7 @@ npx @modelcontextprotocol/inspector .venv/bin/python 06_mcp/mcp_basic_stdio.py
 uv run python -m 06_mcp.mcp_basic_http
 ```
 
-![MCP Basic HTTP Server Run](../docs/images/06_mcp/mcp_basic_http_server_run.png)
+![MCP Basic HTTP Server Run](../../../docs/images/05_mcp/mcp_basic_http_server_run.png)
 
 ### 2. Run LangChain MCP client
 
@@ -75,7 +75,7 @@ uv run python -m 06_mcp.mcp_basic_http
 uv run python -m 06_mcp.mcp_langchain_client_http
 ```
 
-![MCP LangChain Client HTTP Run](../docs/images/06_mcp/mcp_langchain_client_http_run.png) 
+![MCP LangChain Client HTTP Run](../../../docs/images/05_mcp/mcp_langchain_client_http_run.png) 
 
 ### 3. Run the inspector
 
@@ -83,7 +83,7 @@ uv run python -m 06_mcp.mcp_langchain_client_http
 npx @modelcontextprotocol/inspector http://localhost:8000/mcp
 ```
 
-![MCP Basic HTTP Inspector Run](../docs/images/06_mcp/mcp_basic_http_inspector_run.png)
+![MCP Basic HTTP Inspector Run](../../../docs/images/05_mcp/mcp_basic_http_inspector_run.png)
 
 ### 4. Open the inspector in your browser
 
@@ -95,7 +95,7 @@ npx @modelcontextprotocol/inspector http://localhost:8000/mcp
   * Proxy Session Token is set to the token from the inspector run
 * Click on "Connect"
 
-![MCP Basic HTTP Inspector Browser](../docs/images/06_mcp/mcp_basic_http_inspector_browser.png)
+![MCP Basic HTTP Inspector Browser](../../../docs/images/05_mcp/mcp_basic_http_inspector_browser.png)
 
 
 ## Run Inpection in SEE mode
@@ -106,7 +106,7 @@ npx @modelcontextprotocol/inspector http://localhost:8000/mcp
 uv run python -m 06_mcp.mcp_basic_sse
 ```
 
-![MCP Basic SSE Server Run](../docs/images/06_mcp/mcp_basic_sse_server_run.png)
+![MCP Basic SSE Server Run](../../../docs/images/05_mcp/mcp_basic_sse_server_run.png)
 
 ### 2. Run LangChain MCP client
 
@@ -114,7 +114,7 @@ uv run python -m 06_mcp.mcp_basic_sse
 uv run python -m 06_mcp.mcp_langchain_client_sse
 ```
 
-![MCP LangChain Client SEE Run](../docs/images/06_mcp/mcp_langchain_client_sse_run.png) 
+![MCP LangChain Client SEE Run](../../../docs/images/05_mcp/mcp_langchain_client_sse_run.png) 
 
 ### 3. Run the inspector
 
@@ -122,7 +122,7 @@ uv run python -m 06_mcp.mcp_langchain_client_sse
 npx @modelcontextprotocol/inspector http://localhost:8000/mcp
 ```
 
-![MCP Basic SSE Inspector Run](../docs/images/06_mcp/mcp_basic_sse_inspector_run.png)
+![MCP Basic SSE Inspector Run](../../../docs/images/05_mcp/mcp_basic_sse_inspector_run.png)
 
 ### 4. Open the inspector in your browser
 
@@ -134,7 +134,7 @@ npx @modelcontextprotocol/inspector http://localhost:8000/mcp
   * Proxy Session Token is set to the token from the inspector run
 * Click on "Connect"
 
-![MCP Basic SSE Inspector Browser](../docs/images/06_mcp/mcp_basic_sse_inspector_browser.png)
+![MCP Basic SSE Inspector Browser](../../../docs/images/05_mcp/mcp_basic_sse_inspector_browser.png)
 
 
 
@@ -159,7 +159,7 @@ The inspector provides a web interface to:
 uv run python -m 06_mcp.mcp_langchain_client_github
 ```
 
-![MCP LangChain Client GitHub Run](../docs/images/06_mcp/mcp_langchain_client_github_run.png)
+![MCP LangChain Client GitHub Run](../../../docs/images/05_mcp/mcp_langchain_client_github_run.png)
 
 
 ## Using with GitHub Copilot
@@ -213,11 +213,11 @@ Antigravity (Google's AI coding assistant) requires MCP server configuration in 
 
 3. Restart Antigravity to load the MCP server
 
-![MCP Basic Stdio Run](../docs/images/06_mcp/mcp_basic_stdio_manage_mcp_server.png)
+![MCP Basic Stdio Run](../../../docs/images/05_mcp/mcp_basic_stdio_manage_mcp_server.png)
 
 4. Test
 
-![MCP Basic Stdio Run](../docs/images/06_mcp/mcp_basic_stdio_agent_with_mcp_server.png)
+![MCP Basic Stdio Run](../../../docs/images/05_mcp/mcp_basic_stdio_agent_with_mcp_server.png)
 
 **Available Tools After Setup:**
 - `add_expense` - Add expenses to the tracker

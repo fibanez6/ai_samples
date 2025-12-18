@@ -42,14 +42,15 @@ select_openai: ## Select and run an OpenAI example
 	@echo "125) openAi - structured output - pydantic nested"
 	@echo "130) openAi - rag - basic"
 	@echo "140) openAi - mcp - basic - server stdio"
-	@echo "141) openAi - mcp - basic - server http"	
-	@echo "142) openAi - mcp - basic - server sse"
+	@echo "141) openAi - mcp - basic - server sse"
+	@echo "142) openAi - mcp - basic - server http"	
 	@echo "143) openAi - mcp - LangChain - client http"
 	@echo "144) openAi - mcp - LangChain - client sse"
 	@echo "145) openAi - mcp - LangChain - client github"
 	@echo "146) openAi - mcp - inspector - stdio"
-	@echo "147) openAi - mcp - inspector - http"
-	@echo "148) openAi - mcp - inspector - sse"
+	@echo "147) openAi - mcp - inspector - sse"
+	@echo "148) openAi - mcp - inspector - http"
+	@echo "150) openAi - middleware - mcp - opentelemetry"	
 
 	@read -p "Choose an option: " choice; \
 	case $$choice in \
@@ -70,14 +71,15 @@ select_openai: ## Select and run an OpenAI example
 		125) make execute example="agents.openai.03_structured_outputs.structured_pydantic_nested" ;; \
 		130) make execute example="agents.openai.04_rag.rag_basic" ;; \
 		140) make execute example="agents.openai.05_mcp.mcp_basic_server_stdio" ;; \
-		141) make execute example="agents.openai.05_mcp.mcp_basic_server_http" ;; \
-		142) make execute example="agents.openai.05_mcp.mcp_basic_server_sse" ;; \
+		141) make execute example="agents.openai.05_mcp.mcp_basic_server_sse" ;; \
+		142) make execute example="agents.openai.05_mcp.mcp_basic_server_http" ;; \
 		143) make execute example="agents.openai.05_mcp.mcp_langchain_client_http" ;; \
 		144) make execute example="agents.openai.05_mcp.mcp_langchain_client_sse" ;; \
 		145) make execute example="agents.openai.05_mcp.mcp_langchain_client_github" ;; \
 		146) npx @modelcontextprotocol/inspector .venv/bin/python 05_mcp/mcp_basic_stdio.py ;; \
-		147) npx @modelcontextprotocol/inspector  http://localhost:8000/mcp ;; \
-		148) npx @modelcontextprotocol/inspector http://localhost:8000/sse ;; \
+		147) npx @modelcontextprotocol/inspector http://localhost:8000/sse ;; \
+		148) npx @modelcontextprotocol/inspector  http://localhost:8000/mcp ;; \
+		150) make execute example="agents.openai.06_middleware.middleware_mcp_opentelemetry" ;; \
 	esac
 
 select_maf:
