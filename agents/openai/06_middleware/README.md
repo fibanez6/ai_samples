@@ -1,5 +1,7 @@
 # Middleware with MCP + OpenTelemetry
 
+[Azure-Samples / python-mcp-demos](https://github.com/Azure-Samples/python-mcp-demos/tree/main)
+
 ## Index
  - [Middleware with MCP + OpenTelemetry](#middleware-with-mcp--opentelemetry)
  - [Prerequisites](#prerequisites)

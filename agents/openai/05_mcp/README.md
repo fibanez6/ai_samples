@@ -1,5 +1,7 @@
 # MCP Examples
 
+[Azure-Samples / python-mcp-demos](https://github.com/Azure-Samples/python-mcp-demos/tree/main)
+
 ## Index
 
 - [In STDIO mode](#run-inpection-in-stdio-mode)
