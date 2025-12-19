@@ -219,19 +219,19 @@ To use the deployed MCP server with GitHub Copilot Chat:
 4. Enter the URL of the MCP server from `azd env get-value MCP_SERVER_URL`
 5. You should see a Keycloak authentication screen open in your browser. Select "Allow access":
 
-   ![Keycloak allow access screen](images/kc-allow-1.jpg)
+   ![Keycloak allow access screen](../docs/images/azure/kc-allow-1.jpg)
 
 6. Sign in with a Keycloak user (e.g., `testuser` / `testpass` for the pre-configured demo user):
 
-   ![Keycloak sign-in screen](images/kc-signin-2.jpg)
+   ![Keycloak sign-in screen](../docs/images/azure/kc-signin-2.jpg)
 
 7. After authentication, the browser will redirect back to VS Code:
 
-   ![VS Code redirect after Keycloak sign-in](images/kc-redirect-3.jpg)
+   ![VS Code redirect after Keycloak sign-in](../docs/images/azure/kc-redirect-3.jpg)
 
 8. Enable the MCP server in GitHub Copilot Chat tools:
 
-   ![Select MCP tools in GitHub Copilot](images/kc-select-tools-4.jpg)
+   ![Select MCP tools in GitHub Copilot](../docs/images/azure/kc-select-tools-4.jpg)
 
 9. Test it with an expense tracking query:
 
@@ -239,7 +239,7 @@ To use the deployed MCP server with GitHub Copilot Chat:
    Log expense for 75 dollars of office supplies on my visa last Friday
    ```
 
-   ![Example GitHub Copilot Chat with Keycloak auth](images/kc-chat-5.jpg)
+   ![Example GitHub Copilot Chat with Keycloak auth](../docs/images/azure/kc-chat-5.jpg)
 
 10. Verify the expense was added by checking the Cosmos DB `user-expenses` container in the Azure Portal or by asking GitHub Copilot Chat:
 

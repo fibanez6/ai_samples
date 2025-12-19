@@ -13,13 +13,15 @@ help: ## Show this help message
 
 select:
 	@echo "Select example:"
-	@echo "1) openai samples"
-	@echo "2) microsoft agent framework samples"
+	@echo "1) agents - OpenAI samples"
+	@echo "2) agents - Microsoft Agent Framework samples"
+	@echo "3) azure"
 
 	@read -p "Choose an option: " choice; \
 	case $$choice in \
 		1) make select_openai;; \
 		2) make select_maf;; \
+		3) make select_azure;; \
 	esac
 
 select_openai: ## Select and run an OpenAI example
@@ -109,6 +111,15 @@ select_maf:
 		201) make execute example="agents.microsoft_agent_framework.azure_ai_agent.agent_framework_basic_stream" ;; \
 		202) make execute example="agents.microsoft_agent_framework.azure_ai_agent.agent_framework_structured_output" ;; \
 		203) make execute example="agents.microsoft_agent_framework.azure_ai_agent.agent_framework_function_tools" ;; \
+	esac
+
+select_azure:
+	@echo "azure deploy example:"
+	@echo "100) deploy mcp server - http azure deploy"	
+
+	@read -p "Choose an option: " choice; \
+	case $$choice in \
+		100) make execute example="azure.deploy_mcp_server.mcp_server_http_azure_deploy" ;; \
 	esac
 
 install: ## Install dependencies with UV

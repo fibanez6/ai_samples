@@ -100,7 +100,7 @@ Telemetry spans will be emitted for each operation when `OTEL_EXPORTER_OTLP_ENDP
 
 ## 5) Open the Aspire Dashboard in your browser
 
-Go to `http://localhost:18888` and use the login token from the container logs. You should see traces, logs, and metrics from the MCP server.
+Go to `http://localhost:4317` and use the login token from the container logs. You should see traces, logs, and metrics from the MCP server.
 
 ## Troubleshooting
 
