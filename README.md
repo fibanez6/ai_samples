@@ -1,113 +1,102 @@
-# AI Samples Repository
+# AI Samples
 
-This repository contains a collection of AI and agentic workflow samples, including multi-agent orchestration systems, agent frameworks, and practical examples for research, analysis, and automation.
+A curated set of practical AI examples and agentic workflows using OpenAI, Microsoft Agent Framework, MCP, RAG, and observability tooling. This repo is organized into small, runnable samples you can explore via a simple `Makefile` menu.
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 ai_samples/
-├── 01-chat/                       # Basic chat agent example
-├── 02-chat-stream/                # Streaming chat agent example
-├── 03-tools/                      # Tool-using agent examples
-├── 04-agent/                      # General agent framework samples
-├── 0X-agent-framework/
-│   ├── langchain/                 # LangChain agent framework samples
-│   └── microsoft-agent-framework/ # Microsoft agent framework samples
-├── 0X-agentic-pattern/
-│   └── reflection-pattern/        # Agentic reflection pattern example
-├── 0X-mcp/                        # Model Context Protocol (MCP) samples
-├── 0X-multi-agent-orchestration/  # Multi-agent orchestration system (LangGraph, MCP, OpenAI)
-│   ├── src/
-│   │   ├── agents/                # Agent implementations (Research, Analysis, Action)
-│   │   ├── orchestrator/          # LangGraph orchestrator
-│   │   ├── mcp_server/            # MCP server (FastAPI)
-│   │   ├── config/                # Configuration management
-│   │   ├── utils/                 # Utilities
-│   │   ├── examples/              # Usage examples
-│   │   └── cli.py                 # CLI interface
-│   ├── quick_start.py             # Quick start script
-│   ├── Makefile                   # Development commands
-│   ├── pyproject.toml             # Project dependencies
-│   ├── config.json                # Configuration template
-│   ├── .env.example               # Environment template
-│   └── README.md                  # Detailed system documentation
-├── LICENSE
-└── README.md                      # This file
+├── agents/
+│   ├── microsoft_agent_framework/        # Azure AI + Microsoft Agent Framework samples
+│   │   ├── azure_ai/                     # Chat, tools, images, structured outputs, middleware
+│   │   └── azure_ai_agent/               # Agent-focused variations (stream, structured, tools)
+│   └── openai/                           # OpenAI provider samples and helpers
+│       ├── 01_chat/                      # Chat basics (basic, stream, async, history, safety)
+│       ├── 02_function_tools/            # Function/tool calling (basic, extended, stream, parallel)
+│       ├── 03_structured_outputs/        # Pydantic and structured response patterns
+│       ├── 04_rag/                       # Retrieval-Augmented Generation samples
+│       ├── 05_mcp/                       # MCP server and LangChain MCP client demos
+│       ├── 06_middleware/                # Observability and middleware demos
+│       └── ...                           # Additional patterns and evaluations
+├── cloud/
+│   └── azure/
+│       └── deploy_mcp_server/            # FastAPI MCP server for Azure deployment
+├── docs/                                  # Reference docs and images
+├── utils/                                 # Shared utilities
+├── Makefile                               # Menu to run samples
+├── pyproject.toml                         # Python 3.13+ and dependencies
+├── LICENSE                                # MIT License
+└── README.md                              # This file
 ```
 
-## 🚀 Key Projects
+## Quick Start
 
-- **Multi-Agent Orchestration System** (`0X-multi-agent-orchestration/`)
-	- LangGraph-based orchestrator for coordinating Research, Analysis, and Action agents
-	- MCP server for tool integration (HTTP fetcher, web scraper, database)
-	- OpenAI-powered agents for intelligent workflows
-	- Async, stateful, and extensible architecture
+- Python 3.13+ and `uv` recommended; `pip` works too.
+- Create `.env` with your provider credentials (see below).
 
-- **Agent Frameworks**
-	- LangChain and Microsoft agent framework samples for building custom agents
+Setup with `uv`:
 
-- **Agentic Patterns**
-	- Reflection pattern and other agentic workflow examples
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+uv sync
+```
 
+Run the menu to explore samples:
 
-## Resources
+```bash
+make select
+```
 
-- [Microsoft ai-agents-for-beginners](https://github.com/microsoft/ai-agents-for-beginners)
+Or run a specific sample directly (example: OpenAI chat basic):
 
+```bash
+make execute example="agents.openai.01_chat.chat_basic"
+```
 
-## 🛠️ Installation
+Azure MCP server (HTTP) locally via Uvicorn:
 
-### Prerequisites
+```bash
+make execute_uvicorn example="cloud.azure.deploy_mcp_server.app.server_http_basic_mcp"
+```
 
-- **Python 3.13+**
-- **uv** (recommended) or **pip** 
-- One of the AI providers configured (see AI Provider Setup below)
+## Provider Configuration
 
-### Quick Start
+Set your preferred provider in `.env`:
 
-1. **Clone and navigate to the project:**
-   ```bash
-   cd ai-samples
-   ```
+- AGENT_PROVIDER: `github` (default) | `openai` | `azure` | `anthropic` | `ollama`
+- Model name per provider via `{PROVIDER}_MODEL`, e.g. `OPENAI_MODEL`, `GITHUB_MODEL`, `AZURE_MODEL`, `ANTHROPIC_MODEL`, `OLLAMA_MODEL`
 
-2. **Install dependencies:**
+Credentials and endpoints used by the samples:
 
-   **Option A: Using uv (recommended - fastest):**
-   ```bash
-   # Install uv if not already installed
-   curl -LsSf https://astral.sh/uv/install.sh | sh
-   source $HOME/.local/bin/env
+- OpenAI (sync client): `OPENAI_API_KEY`
+- OpenAI (async client): `OPENAI_KEY` (used by async variants)
+- GitHub Models: `GITHUB_TOKEN`, optional `GITHUB_API_URL` (defaults to https://models.github.ai/inference)
+- Azure OpenAI: `AZURE_ENDPOINT` and local Azure auth via DefaultAzureCredential (Azure CLI/Workload Identity/Managed Identity)
+- Anthropic: `ANTHROPIC_API_KEY`
+- Ollama: `OLLAMA_HOST` (e.g., http://localhost:11434)
 
-   # Sync all dependencies (creates virtual environment automatically)
-   uv sync
-   ```
+Note: Some samples use `AsyncOpenAI` and others `OpenAI`. Ensure the correct OpenAI key env var is present for the variant you run.
 
-   **Option B: Traditional pip installation:**
-   ```bash
-   python3.13 -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   pip install --upgrade pip
-   pip install -e .
-   ```
+## Common Examples
 
-4. **Configure AI provider:**
-   ```bash
-   # Create environment file
-   cp .env.example .env     # If available, or create new .env file
+- OpenAI Chat (basic): `agents.openai.01_chat.chat_basic`
+- OpenAI Tools (parallel): `agents.openai.02_function_tools.tools_multiple_parallel`
+- Structured Outputs (Pydantic): `agents.openai.03_structured_outputs.structured_pydantic`
+- RAG Basic: `agents.openai.04_rag.rag_basic`
+- MCP Server (stdio/SSE/HTTP): see `agents.openai.05_mcp.*`
+- Middleware + OpenTelemetry: `agents.openai.06_middleware.middleware_mcp_opentelemetry`
 
-   # Edit .env with your credentials
-   nano .env
-   ```
+Explore Microsoft Agent Framework samples under `agents/microsoft_agent_framework/azure_ai*`.
 
-5. **Run the application:**
-   ```bash
-   make select
-   ```
+## References
 
-## 📜 License
+- MCP servers and links: see [README_mcp.md](README_mcp.md)
+- Curated external repos: see [README_repos.md](README_repos.md)
 
-MIT License. See the [LICENSE](LICENSE) file for details.
+## License
+
+MIT License. See [LICENSE](LICENSE).
 
 ---
 
-**Built for modern AI-powered agentic workflows.**
+Built to be small, focused, and easy to run.
