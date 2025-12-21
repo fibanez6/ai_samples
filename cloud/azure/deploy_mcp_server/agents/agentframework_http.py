@@ -1,3 +1,8 @@
+"""
+Docstring for azure.deploy_mcp_server.agents.agentframework_http
+
+`uv run agents/agentframework_http.py` to execute.
+"""
 import asyncio
 import logging
 import os

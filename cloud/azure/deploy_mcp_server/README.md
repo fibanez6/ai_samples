@@ -20,6 +20,20 @@ This guide provides comprehensive instructions for deploying a production-ready 
 
 ---
 
+## Learn
+
+- [Azure Python + MCP](./docs/PythonMCP-Deploying.pdf) - Slides 
+- [Python + MCP: Building MCP servers with FastMCP](https://www.youtube.com/watch?v=_mUuhOwv9PY) - Video
+- [Python + MCP: Deploying MCP servers to the cloud](https://www.youtube.com/watch?v=gL3WYfXAiWI) - Video
+- [Python + MCP: Authentication for MCP servers](https://www.youtube.com/watch?v=_Redi3ChzFA) - Video
+
+## Readmes
+
+- [Docker](./docs/README_app_docker.md)
+- [Deployment](./docs/README_azure_deployment.md)
+- [Observability](./docs/README_observability.md)
+- [Troubleshooting](./docs/README_troubleshooting.md)
+
 ## Architecture Overview
 
 The MCP server is deployed as a containerized application on Azure Container Apps, with the following components:
@@ -40,6 +54,10 @@ The MCP server is deployed as a containerized application on Azure Container App
 │  DB (NoSQL)     │ │  Insights   │  │  (GPT-4o-mini)   │
 └─────────────────┘ └─────────────┘  └──────────────────┘
 ```
+
+### Architecture of Private MCP + agent on Azure
+
+![Architecture of Private MCP + agent on Azure](./docs/images/azure_app_arch.png)
 
 ### Key Features
 
@@ -145,7 +163,7 @@ Example: `my-mcp-abc123-cosmos` for Cosmos DB
    
    Deployment takes 5-10 minutes.
    
-   ![azd up](./images/azure_azd_provising_01.png)
+   ![azd up](./docs/images/azure_azd_provising_01.png)
 
 4. **Verify deployment**:
    ```bash
@@ -155,9 +173,7 @@ Example: `my-mcp-abc123-cosmos` for Cosmos DB
    # Test health endpoint
    curl $(azd env get-value MCP_SERVER_URL)/health
    ```
-
-
-
+   
 ---
 
 ## Configuration Options
@@ -367,7 +383,7 @@ For high availability, configure Cosmos DB with multiple regions:
 
 ### 1. Health Check
 
-![Azure App Server](./images/azure_app_health_status.png)
+![Azure App Server](./docs/images/azure_app_health_status.png)
 
 ```bash
 # Get server URL
@@ -380,7 +396,7 @@ curl $SERVER_URL/health
 
 ### 2. View Deployed Resources
 
-![Azure Resources](./images/azure_resources.png)
+![Azure Resources](./docs/images/azure_resources.png)
 
 ```bash
 # List all resources
@@ -389,13 +405,13 @@ az resource list --resource-group $(azd env get-value AZURE_RESOURCE_GROUP_NAME)
 
 ### 3. View Deployment Details
 
-![Azure Resource Group Deployment](./images/azure_resourcegroup_deployment.png)
+![Azure Resource Group Deployment](./docs/images/azure_resourcegroup_deployment.png)
 
 Navigate to Azure Portal → Resource Group → Deployments to see the complete deployment history.
 
 ### 4. Check Container App
 
-![Azure App Server](./images/azure_app_server_details.png)
+![Azure App Server](./docs/images/azure_app_server_details.png)
 
 ```bash
 # View logs
@@ -423,7 +439,7 @@ az containerapp logs show \
      azd env get-value MCP_SERVER_URL
      ```
 
-    ![Add server](./images/azure_vscode_mcp.png)
+    ![Add server](./docs/images/azure_vscode_mcp.png)
 
 3. **For OAuth-enabled deployments**:
    - Browser will open for authentication
@@ -435,7 +451,7 @@ az containerapp logs show \
    - Open GitHub Copilot Chat
    - Enable MCP server tools
 
-    ![Enable tools](./images/azure_vscode_mcp_enable_tools.png)
+    ![Enable tools](./docs/images/azure_vscode_mcp_enable_tools.png)
 
 ### Test with Sample Queries
 
@@ -450,18 +466,18 @@ Show me my expenses from last week
 Analyze my spending patterns for the month and suggest budget optimizations
 ```
 
-![Add an expense](./images/azure_copilot_add_expense.png)
+![Add an expense](./docs/images/azure_copilot_add_expense.png)
 
 
 ### Check data in CosmosDB
 
-![Expenses in CosmosDb](./images/azure_cosmosdb_expense_data.png)
+![Expenses in CosmosDb](./docs/images/azure_cosmosdb_expense_data.png)
 
 
 ### Check App container
 
 **Environment variables:**
-![App environment variables](./images/azure_app_container_env.png)
+![App environment variables](./docs/images/azure_app_container_env.png)
 
 **Logs:**
-![App container Logs](./images/azure_app_container_logs.png)
+![App container Logs](./docs/images/azure_app_container_logs.png)

@@ -115,11 +115,11 @@ select_maf:
 
 select_azure:
 	@echo "azure deploy example:"
-	@echo "100) deploy mcp server - http azure deploy"	
+	@echo "100) deploy mcp server - http basic mcp"	
 
 	@read -p "Choose an option: " choice; \
 	case $$choice in \
-		100) make execute example="azure.deploy_mcp_server.mcp_server_http_azure_deploy" ;; \
+		100) make execute_uvicorn example="cloud.azure.deploy_mcp_server.app.server_http_basic_mcp" ;; \
 	esac
 
 install: ## Install dependencies with UV
@@ -131,6 +131,14 @@ execute: ## Execute a query (use: make execute example="python filepath")
 		exit 1; \
 	fi
 	uv run python -m "$(example)"
+
+
+execute_uvicorn: ## Execute a query (use: make execute example="python filepath")
+	@if [ -z "$(example)" ]; then \
+		echo "Usage: make execute example=\"01_chat.chat_basic\""; \
+		exit 1; \
+	fi
+	uvicorn "$(example):app" --host 0.0.0.0 --port 8000  --reload
 
 clean: ## Clean up cache and temporary files
 	rm -rf .pytest_cache/
