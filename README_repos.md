@@ -15,12 +15,9 @@ A curated list of AI/ML repositories organized by topic and purpose.
 - **[Build a Large Language Model (From Scratch)](https://github.com/rasbt/LLMs-from-scratch)** - Complete guide to developing, pretraining, and finetuning GPT-like LLMs
 - **[Practical Deep Learning](https://course.fast.ai/)** - A free course designed for people with some coding experience, who want to learn how to apply deep learning and machine learning to practical problems.
 
-
-
 ### Certificates
 - **[AI For Everyone](https://www.coursera.org/learn/ai-for-everyone)** - [Deeplearning](https://www.deeplearning.ai/courses/ai-for-everyone) (Recommended) (Certificate) - Learn the meaning behind common AI terminology, including neural networks, machine learning, deep learning, and data science.
 - **[IBM RAG and Agentic AI Professional Certificate](https://www.coursera.org/professional-certificates/ibm-rag-and-agentic-ai#outcomes)** - Build real-world AI with RAG and agentic AI. Use AI tools to streamline automation, drive innovation & take your career further, faster.
-
 
 ## 🛠️ Frameworks & Tools
 
@@ -38,6 +35,12 @@ A curated list of AI/ML repositories organized by topic and purpose.
 - **[Agentic RAG for Dummies](https://github.com/GiovanniPasq/agentic-rag-for-dummies)** - Build a production-ready Agentic RAG system with LangGraph, conversation memory, and human-in-the-loop query clarification
 - **[RAG From Scratch](https://github.com/langchain-ai/rag-from-scratch/tree/main?tab=readme-ov-file)** - Build an understanding of RAG from scratch, starting with the basics of indexing, retrieval, and generation.
 
+
+## 💻 Applications
+- **[Azure AI Travel Agents](https://github.com/Azure-Samples/azure-ai-travel-agents)** - The AI Travel Agents is a modular reference application that leverages multiple AI agents to enhance travel agency operations
+- **[Weather App for ChatGPT](https://github.com/anthonychu/chatgpt-app-weather-functions-selfhosted)** - A ChatGPT app that provides current weather information with an interactive widget, built using the OpenAI Apps SDK and deployed to Azure Functions.
+- **[Agentic Popup shop](https://github.com/tonybaloney/agentic-popup-shop)** - This is a multi-service application designed to showcase integration of agents into an existing application.
+
 ## 💻 Implementation Examples
 
 ### OpenAI & Azure OpenAI
@@ -48,9 +51,8 @@ A curated list of AI/ML repositories organized by topic and purpose.
 - **[Vector Embedding Demos](https://github.com/pamelafox/vector-embeddings-demos)** - Examples of working with vector embeddings
 - **[AI Quality & Safety Demos](https://github.com/Azure-Samples/ai-quality-safety-demos)** - Scripts for evaluating AI content quality and safety using Azure AI Evaluation SDK
 
-## 📖 Curated Collections
+## 📖 Collections
 - **[Awesome LLM Apps](https://github.com/Shubhamsaboo/awesome-llm-apps)** - Comprehensive collection of LLM applications (Multi-agent, Voice AI, MCP, RAG, Chat)
-
 
 ## Videos
 
