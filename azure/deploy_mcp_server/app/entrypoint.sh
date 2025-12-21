@@ -2,7 +2,7 @@
 set -e
 
 # Default to deployed if not provided by runtime
-MCP_ENTRY_VAL="${MCP_ENTRY:-server_http_azure_deployed}"
+MCP_ENTRY_VAL="${MCP_ENTRY:-server_http_azure_deployed_mcp}"
 
 # Build ASGI target module path
 APP_MODULE="${MCP_ENTRY_VAL}:app"

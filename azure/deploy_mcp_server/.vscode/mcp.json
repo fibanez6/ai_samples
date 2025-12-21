@@ -1,0 +1,9 @@
+{
+	"servers": {
+		"my-azure-mcp-server-01b5554a": {
+			"url": "https://mcp-example-prkowk3-kc.redcliff-46f7356a.eastus2.azurecontainerapps.io/mcp",
+			"type": "http"
+		}
+	},
+	"inputs": []
+}

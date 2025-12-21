@@ -80,7 +80,6 @@ async def add_expense(
         logger.error(f"Error adding expense: {str(e)}")
         return "Error: Unable to add expense"
 
-
 @mcp.resource("resource://expenses")
 async def get_expenses_data():
     """Get raw expense data from CSV file"""

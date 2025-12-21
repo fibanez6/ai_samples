@@ -55,4 +55,5 @@ A curated list of AI/ML repositories organized by topic and purpose.
 ## Videos
 
 - **[Microsoft Reactor](https://www.youtube.com/@MicrosoftReactor)**
+  - **[Python + MCP: From local to production](https://developer.microsoft.com/en-us/reactor/series/S-1614/?wt.mc_id=youtube_S-1614_organicsocial_reactor)**
   - **[Python + IA: Al Siguiente Nivel](https://developer.microsoft.com/en-us/reactor/series/s-1580/)** - [Resources](https://github.com/orgs/azure-ai-foundry/discussions/165) (Spanish)

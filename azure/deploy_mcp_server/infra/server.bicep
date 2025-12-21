@@ -40,7 +40,7 @@ param mcpAuthProvider string = 'none'
 
 // Base environment variables
 // Select MCP entrypoint based on configured auth (Keycloak or FastMCP Azure auth)
-var mcpEntry = (!empty(keycloakRealmUrl) || !empty(entraProxyClientId)) ? 'auth' : 'deployed'
+var mcpEntry = (!empty(keycloakRealmUrl) || !empty(entraProxyClientId)) ? 'auth' : 'server_http_azure_deployed_mcp'
 var baseEnv = [
   {
     name: 'AZURE_OPENAI_CHAT_DEPLOYMENT'

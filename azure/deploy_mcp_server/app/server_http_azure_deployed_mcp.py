@@ -71,7 +71,6 @@ logger.info(f"Connected to Cosmos DB: {AZURE_COSMOSDB_ACCOUNT}")
 # Create the MCP server with OpenTelemetry middleware
 mcp = FastMCP("Expenses Tracker", middleware=[OpenTelemetryMiddleware("ExpensesMCP")])
 
-
 class PaymentMethod(Enum):
     AMEX = "amex"
     VISA = "visa"
