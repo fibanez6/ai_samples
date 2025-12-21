@@ -13,13 +13,15 @@ help: ## Show this help message
 
 select:
 	@echo "Select example:"
-	@echo "1) openai samples"
-	@echo "2) microsoft agent framework samples"
+	@echo "1) agents - OpenAI samples"
+	@echo "2) agents - Microsoft Agent Framework samples"
+	@echo "3) azure"
 
 	@read -p "Choose an option: " choice; \
 	case $$choice in \
 		1) make select_openai;; \
 		2) make select_maf;; \
+		3) make select_azure;; \
 	esac
 
 select_openai: ## Select and run an OpenAI example
@@ -42,14 +44,15 @@ select_openai: ## Select and run an OpenAI example
 	@echo "125) openAi - structured output - pydantic nested"
 	@echo "130) openAi - rag - basic"
 	@echo "140) openAi - mcp - basic - server stdio"
-	@echo "141) openAi - mcp - basic - server http"	
-	@echo "142) openAi - mcp - basic - server sse"
+	@echo "141) openAi - mcp - basic - server sse"
+	@echo "142) openAi - mcp - basic - server http"	
 	@echo "143) openAi - mcp - LangChain - client http"
 	@echo "144) openAi - mcp - LangChain - client sse"
 	@echo "145) openAi - mcp - LangChain - client github"
 	@echo "146) openAi - mcp - inspector - stdio"
-	@echo "147) openAi - mcp - inspector - http"
-	@echo "148) openAi - mcp - inspector - sse"
+	@echo "147) openAi - mcp - inspector - sse"
+	@echo "148) openAi - mcp - inspector - http"
+	@echo "150) openAi - middleware - mcp - opentelemetry"	
 
 	@read -p "Choose an option: " choice; \
 	case $$choice in \
@@ -70,14 +73,15 @@ select_openai: ## Select and run an OpenAI example
 		125) make execute example="agents.openai.03_structured_outputs.structured_pydantic_nested" ;; \
 		130) make execute example="agents.openai.04_rag.rag_basic" ;; \
 		140) make execute example="agents.openai.05_mcp.mcp_basic_server_stdio" ;; \
-		141) make execute example="agents.openai.05_mcp.mcp_basic_server_http" ;; \
-		142) make execute example="agents.openai.05_mcp.mcp_basic_server_sse" ;; \
+		141) make execute example="agents.openai.05_mcp.mcp_basic_server_sse" ;; \
+		142) make execute example="agents.openai.05_mcp.mcp_basic_server_http" ;; \
 		143) make execute example="agents.openai.05_mcp.mcp_langchain_client_http" ;; \
 		144) make execute example="agents.openai.05_mcp.mcp_langchain_client_sse" ;; \
 		145) make execute example="agents.openai.05_mcp.mcp_langchain_client_github" ;; \
 		146) npx @modelcontextprotocol/inspector .venv/bin/python 05_mcp/mcp_basic_stdio.py ;; \
-		147) npx @modelcontextprotocol/inspector  http://localhost:8000/mcp ;; \
-		148) npx @modelcontextprotocol/inspector http://localhost:8000/sse ;; \
+		147) npx @modelcontextprotocol/inspector http://localhost:8000/sse ;; \
+		148) npx @modelcontextprotocol/inspector  http://localhost:8000/mcp ;; \
+		150) make execute example="agents.openai.06_middleware.middleware_mcp_opentelemetry" ;; \
 	esac
 
 select_maf:
@@ -109,6 +113,15 @@ select_maf:
 		203) make execute example="agents.microsoft_agent_framework.azure_ai_agent.agent_framework_function_tools" ;; \
 	esac
 
+select_azure:
+	@echo "azure deploy example:"
+	@echo "100) deploy mcp server - http basic mcp"	
+
+	@read -p "Choose an option: " choice; \
+	case $$choice in \
+		100) make execute_uvicorn example="cloud.azure.deploy_mcp_server.app.server_http_basic_mcp" ;; \
+	esac
+
 install: ## Install dependencies with UV
 	uv sync
 
@@ -118,6 +131,14 @@ execute: ## Execute a query (use: make execute example="python filepath")
 		exit 1; \
 	fi
 	uv run python -m "$(example)"
+
+
+execute_uvicorn: ## Execute a query (use: make execute example="python filepath")
+	@if [ -z "$(example)" ]; then \
+		echo "Usage: make execute example=\"01_chat.chat_basic\""; \
+		exit 1; \
+	fi
+	uvicorn "$(example):app" --host 0.0.0.0 --port 8000  --reload
 
 clean: ## Clean up cache and temporary files
 	rm -rf .pytest_cache/

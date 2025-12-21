@@ -1,34 +1,34 @@
 {
   "servers": {
-    "basic-mcp": {
+    "basic-mcp-expenses": {
+			"type": "stdio",
+			"command": "uv",
+			"cwd": "${workspaceFolder}",
+			"args": [
+				"run",
+				"agents/openai/05_mcp/mcp_basic_server_stdio.py"
+			]
+		},
+    "basic-mcp-http-expenses-server": {
       "type": "stdio",
       "command": "uv",
-      "cwd": "${workspaceFolder}/06_mcp",
+      "cwd": "${workspaceFolder}",
       "args": [
         "run",
-        "mcp_basic_server_stdio.py"
-      ]
-    },
-    "basic-http": {
-      "type": "stdio",
-      "command": "uv",
-      "cwd": "${workspaceFolder}/06_mcp",
-      "args": [
-        "run",
-        "mcp_basic_server_http.py"
+        "agents/openai/05_mcp/mcp_basic_server_http.py"
       ],
       "env": {
-        "PORT": "8001"
+        "PORT": "8000"
       }
     },
-    "basic-mcp-http-client": {
+    "basic-mcp-http-expenses-client": {
       "type": "http",
       "url": "http://localhost:8000/mcp"
     },
-    "basic-mcp-debug": {
+    "basic-mcp-expenses-debug": {
       "type": "stdio",
       "command": "uv",
-      "cwd": "${workspaceFolder}/06_mcp",
+      "cwd": "${workspaceFolder}",
       "args": [
         "run",
         "--",
@@ -37,7 +37,7 @@
         "debugpy",
         "--listen",
         "0.0.0.0:5678",
-        "mcp_basic_server_stdio.py"
+        "agents/openai/05_mcp/mcp_basic_server_stdio.py"
       ]
     },
     "github": {
@@ -46,24 +46,7 @@
       "headers": {
         "Authorization": "Bearer ${input:github_mcp_pat}"
       }
-    },
-    "local-github-server": {
-      "command": "docker",
-      "args": [
-      "run",
-      "-i",
-      "--rm",
-      "-e",
-      "GITHUB_PERSONAL_ACCESS_TOKEN",
-      "-e",
-      "GITHUB_HOST",
-      "ghcr.io/github/github-mcp-server"
-      ],
-      "env": {
-          "GITHUB_PERSONAL_ACCESS_TOKEN": "${input:github_token}",
-          "GITHUB_HOST": "https://<your GHES or ghe.com domain name>"
-      }
-}
+    }
   },
   "inputs": [
     {

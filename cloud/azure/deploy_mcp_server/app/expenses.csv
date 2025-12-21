@@ -1,0 +1,7 @@
+date,amount,category,description,payment_method
+2024-08-01,4.50,food,"Morning coffee",AMEX
+2024-08-01,12.99,food,"Lunch sandwich",AMEX
+2024-08-01,45.00,transport,"Gas station",VISA
+2024-08-02,8.75,food,"Breakfast burrito",CASH
+2024-08-02,15.00,transport,"Parking downtown",VISA
+2024-08-02,25.99,entertainment,"Movie ticket",AMEX
