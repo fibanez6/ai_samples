@@ -1,6 +1,6 @@
-# Observability
+# MCP Observability
 
-See [Observability with OpenTelemetry (OTel)](./PythonMCP-Deploying.pdf) - From page 18
+See [PythonMCP-Deploying.pdf](./PythonMCP-Deploying.pdf) - From page 18
 
 ## Application Insights
 

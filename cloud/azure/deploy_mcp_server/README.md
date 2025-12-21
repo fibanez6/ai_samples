@@ -4,6 +4,8 @@ This guide provides comprehensive instructions for deploying a production-ready 
 
 ## Table of Contents
 
+- [Learn](#learn)
+- [Readmes](#readmes)
 - [Architecture Overview](#architecture-overview)
 - [Prerequisites](#prerequisites)
 - [Deployed Azure Resources](#deployed-azure-resources)
@@ -14,15 +16,14 @@ This guide provides comprehensive instructions for deploying a production-ready 
 - [Advanced Deployment Scenarios](#advanced-deployment-scenarios)
 - [Post-Deployment Verification](#post-deployment-verification)
 - [Using with GitHub Copilot](#using-with-github-copilot)
-- [Local Development](#local-development)
-- [Troubleshooting](#troubleshooting)
-- [Cost Management](#cost-management)
+- [Deploy to Azure with private networking](#deploy-to-azure-with-private-networking)
 
 ---
 
 ## Learn
 
-- [Azure Python + MCP](./docs/PythonMCP-Deploying.pdf) - Slides 
+- [Azure Python + MCP - Deployment](./docs/PythonMCP-Deploying.pdf) - Slides 
+- [Azure Python + MCP - Authentication](./docs/PythonMCP-Authentication.pdf) - Slides 
 - [Python + MCP: Building MCP servers with FastMCP](https://www.youtube.com/watch?v=_mUuhOwv9PY) - Video
 - [Python + MCP: Deploying MCP servers to the cloud](https://www.youtube.com/watch?v=gL3WYfXAiWI) - Video
 - [Python + MCP: Authentication for MCP servers](https://www.youtube.com/watch?v=_Redi3ChzFA) - Video
@@ -481,3 +482,30 @@ Analyze my spending patterns for the month and suggest budget optimizations
 
 **Logs:**
 ![App container Logs](./docs/images/azure_app_container_logs.png)
+
+## Deploy to Azure with private networking
+
+To demonstrate enhanced security for production deployments, this project supports deploying with a virtual network (VNet) configuration that restricts public access to Azure resources.
+
+1. Set these azd environment variables to set up a virtual network and private endpoints for the Container App, Cosmos DB, and OpenAI resources:
+
+   ```bash
+   azd env set USE_VNET true
+   azd env set USE_PRIVATE_INGRESS true
+   ```
+
+   The Log Analytics and ACR resources will still have public access enabled, so that you can deploy and monitor the app without needing a VPN. In production, you would typically restrict these as well.
+
+2. Provision and deploy:
+
+   ```bash
+   azd up
+   ```
+
+### Additional costs for private networking
+
+When using VNet configuration, additional Azure resources are provisioned:
+
+- **Virtual Network**: Pay-as-you-go tier. Costs based on data processed. [Pricing](https://azure.microsoft.com/pricing/details/virtual-network/)
+- **Azure Private DNS Resolver**: Pricing per month, endpoints, and zones. [Pricing](https://azure.microsoft.com/pricing/details/dns/)
+- **Azure Private Endpoints**: Pricing per hour per endpoint. [Pricing](https://azure.microsoft.com/pricing/details/private-link/)
