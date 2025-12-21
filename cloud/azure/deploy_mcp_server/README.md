@@ -33,6 +33,8 @@ This guide provides comprehensive instructions for deploying a production-ready 
 - [Docker](./docs/README_app_docker.md)
 - [Deployment](./docs/README_azure_deployment.md)
 - [Observability](./docs/README_observability.md)
+- [Authentication](./docs/README_authentication.md)
+   - [Keycloak and Entra](./docs/README_app_keycloak_and_entra_proxy_auth.md)
 - [Troubleshooting](./docs/README_troubleshooting.md)
 
 ## Architecture Overview

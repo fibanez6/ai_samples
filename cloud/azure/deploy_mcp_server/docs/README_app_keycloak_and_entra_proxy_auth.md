@@ -15,12 +15,23 @@ See [PythonMCP-Authentication.pdf](./PythonMCP-Authentication.pdf) - pag 34
 
 Follow instructions in README for ["Deploy to Azure with Keycloak"](https://github.com/Azure-Samples/python-mcp-demos?tab=readme-ov-file#deploy-to-azure-with-keycloak-authentication):
 
+
+### Keycloak authentication
+
 User: admin
 
 ```bash
 azd auth login
 azd env set MCP_AUTH_PROVIDER keycloak
 azd env set KEYCLOAK_ADMIN_PASSWORD "YourSecurePassword123"
+azd up
+```
+### Entra OAuth Proxy
+
+```bash
+azd auth login
+azd env set MCP_AUTH_PROVIDER entra_proxy
+azd env set AZURE_TENANT_ID your-tenant-id
 azd up
 ```
 
