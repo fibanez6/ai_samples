@@ -52,7 +52,8 @@ select_openai: ## Select and run an OpenAI example
 	@echo "146) openAi - mcp - inspector - stdio"
 	@echo "147) openAi - mcp - inspector - sse"
 	@echo "148) openAi - mcp - inspector - http"
-	@echo "150) openAi - middleware - mcp - opentelemetry"	
+	@echo "170) openAi - auth - mcp - entra proxy"
+	@echo "180) openAi - observability - opentelemetry"	
 
 	@read -p "Choose an option: " choice; \
 	case $$choice in \
@@ -80,8 +81,9 @@ select_openai: ## Select and run an OpenAI example
 		145) make execute example="agents.openai.05_mcp.mcp_langchain_client_github" ;; \
 		146) npx @modelcontextprotocol/inspector .venv/bin/python 05_mcp/mcp_basic_stdio.py ;; \
 		147) npx @modelcontextprotocol/inspector http://localhost:8000/sse ;; \
-		148) npx @modelcontextprotocol/inspector  http://localhost:8000/mcp ;; \
-		150) make execute example="agents.openai.06_middleware.middleware_mcp_opentelemetry" ;; \
+		148) npx @modelcontextprotocol/inspector http://localhost:8000/mcp ;; \
+		170) make execute example="agents.openai.07_authentication.auth_mcp_entra_proxy" ;; \
+		180) make execute example="agents.openai.08_observability.observability_opentelemetry" ;; \
 	esac
 
 select_maf:
