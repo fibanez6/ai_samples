@@ -212,3 +212,5 @@ __marimo__/
 
 test.py
 claude-review.yml.bck
+
+*.nopush

@@ -138,10 +138,6 @@ npx @modelcontextprotocol/inspector http://localhost:8000/mcp
 
 ![MCP Basic SSE Inspector Browser](../../../docs/images/05_mcp/mcp_basic_sse_inspector_browser.png)
 
-
-
-
-
 ## MCP Inspector
 
 The MCP Inspector is a developer tool for testing and debugging MCP servers.

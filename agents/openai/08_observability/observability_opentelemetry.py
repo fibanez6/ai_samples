@@ -38,7 +38,11 @@ from typing import Annotated
 from dotenv import load_dotenv
 from fastmcp import FastMCP
 from fastmcp.server.middleware import Middleware
-from opentelemetry_middleware import OpenTelemetryMiddleware, configure_aspire_dashboard
+
+from .opentelemetry_middleware import (
+    OpenTelemetryMiddleware,
+    configure_aspire_dashboard,
+)
 
 load_dotenv(override=True)
 
